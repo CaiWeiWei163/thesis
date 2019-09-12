@@ -65,7 +65,7 @@ public class SysDictService {
             if (!this.sysDictMapper.isExist(dict.getDictkey(), (String) null)) {
                 this.sysDictMapper.insert(dict);
             } else {
-                throw new KnowException("已存在相同的字典Key,添加失败");
+                throw new KnowException(dict.getDictvalue() + " 已存在,请重新输入！");
             }
         }
     }
@@ -88,14 +88,12 @@ public class SysDictService {
         if (entity != null) {
             entity.setUpdatetime(new Date());
             entity.setUpdateuser(currentLoinUser.getId());
-            entity.setDictkey(dict.getDictkey());
+            entity.setDictkey(dict.getDictparentkey() + "_" + dict.getDictvalue());
             entity.setDictvalue(dict.getDictvalue());
-            entity.setDictkey(dict.getDictkey());
             entity.setNote(dict.getNote());
             if (this.sysDictMapper.isExist(entity.getDictkey(), entity.getId())) {
-                throw new KnowException("已存在相同的字典Key,修改失败");
+                throw new KnowException(dict.getDictvalue() + "已存在,请重新输入！");
             }
-
             this.sysDictMapper.updateByPrimaryKey(entity);
         }
 

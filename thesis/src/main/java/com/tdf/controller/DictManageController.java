@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Date;
 
 /**
- * 类型管理
+ * 类型管理、作者管理、关键字管理、引证文献管理
  *
  * @author cww
  * @create 2019-09-11 16:15

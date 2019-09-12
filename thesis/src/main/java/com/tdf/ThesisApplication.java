@@ -8,20 +8,20 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication(scanBasePackages = { "com.tdf" }, exclude = SecurityAutoConfiguration.class)
-@MapperScan(basePackages = { "com.tdf.dao.*" })
+@SpringBootApplication(scanBasePackages = {"com.tdf"}, exclude = SecurityAutoConfiguration.class)
+@MapperScan(basePackages = {"com.tdf.dao.*"})
 @ServletComponentScan
 /*war打包方式*/
-public class ThesisApplication extends SpringBootServletInitializer  {
+public class ThesisApplication extends SpringBootServletInitializer {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ThesisApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ThesisApplication.class, args);
+    }
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(ThesisApplication.class);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(ThesisApplication.class);
+    }
 }
 
 /*jar 打包方式*/

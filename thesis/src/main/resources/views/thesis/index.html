@@ -1,0 +1,293 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="~{_viewStart}">
+<meta charset="utf-8">
+<th:block layout:fragment="styles">
+    <style>
+        html {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    </style>
+</th:block>
+<div layout:fragment="mainContent">
+    <div class="layui-breadcrumb-box">
+        <span class="layui-breadcrumb">
+        <a><cite>论文管理</cite></a>
+        </span>
+    </div>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-form layui-card-header " lay-filter="sreachForm">
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="padding-left: 15px;">
+                        <div class="layui-input-block" style="margin-left:1px;">
+                            <select name="state">
+                                <option value="">请选择</option>
+                                <option value="1" selected="selected">关键字</option>
+                                <option value="2">Invalid</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline" style="margin-left: -110px;">
+                        <div class="layui-input-block">
+                            <input type="text" name="keyword" id="keyword" placeholder="请输入作者/文献名称/标题/内容/"
+                                   autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="searchButton" class="layui-btn " lay-submit lay-filter="sreachBtn">
+                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        </button>
+                    </div>
+                    <div class="layui-inline">
+                        <a id="btn_addUser" href="JavaScript:;" class="layui-btn"><i
+                                class="layui-icon layui-icon-add-1 layuiadmin-button-btn"></i>Add</a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <table id="hospital" lay-filter="test"></table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="detail">编辑</a>
+    </script>
+    <script type="text/html" id="switchTpl">
+        <input type="checkbox" name="id" value="{{d.id}}" lay-skin="switch" lay-text="Valid|Invalid"
+               lay-filter="sexDemo" {{
+               d.state== 1 ? 'checked' : '' }}>
+    </script>
+    <!--新增医院-->
+    <script type="text/html" id="userformDatatml">
+        <div class="layui-form" lay-filter="formdata">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 125px">Hospital name</label>
+                <div class="layui-input-block">
+                    <input type="text" name="hospitalName" lay-verify="required" autocomplete="off" style="width: 300px"
+                           placeholder="Please enter the name of the hospital" th:maxlength="50"
+                           class="layui-input layui-input-alert">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 125px">Hospital loginName</label>
+                <div class="layui-input-block">
+                    <input type="text" name="loginName" lay-verify="required" autocomplete="off" style="width: 300px"
+                           placeholder="Please enter your account number" th:maxlength="50" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 125px">Hospital password</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password" id="password" lay-verify="required" autocomplete="off"
+                           style="width: 300px"
+                           placeholder="Please enter your account password" th:maxlength="50" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 125px">Confirm password</label>
+                <div class="layui-input-block">
+                    <input type="password" id="affirmpassword" lay-verify="required" autocomplete="off"
+                           style="width: 300px"
+                           placeholder="Please confirm the password again" th:maxlength="50" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 125px">IsValid</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="state" value="1" lay-verify="required"
+                           lay-skin="switch" checked>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="demoformbtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </script>
+    <!--医院详情-->
+    <script type="text/html" id="detailUserformDatatml">
+        <div class="layui-form" lay-filter="detailFormdata">
+            <div class="layui-form-item">
+                <label class="layui-form-label">Hospital name</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="id">
+                    <input type="text" name="hospitalName" disabled="disabled" style="border:none;"
+                           lay-verify="required" autocomplete="off" maxlength="50" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Hospital loginName</label>
+                <div class="layui-input-block">
+                    <input type="text" name="loginName" disabled="disabled" style="border:none;"
+                           lay-verify="required" autocomplete="off" maxlength="50" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Password</label>
+                <div class="layui-input-block">
+                    <input type="text" name="password" disabled="disabled" style="border:none;" lay-verify="required"
+                           autocomplete="off" maxlength="50" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">IsValid</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="state" lay-verify="required" lay-skin="switch" disabled>
+                    <!--<input type="text" name="state" disabled="disabled" style="border:none;" lay-verify="required"-->
+                    <!--autocomplete="off" maxlength="200" class="layui-input">-->
+                </div>
+            </div>
+        </div>
+    </script>
+
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        $("#keyword").keydown(function (e) {
+            if (e.keyCode == 13) {
+                $("#searchButton").trigger("click");
+            }
+        });
+
+        var addUser = function (data, callBackFunc) {
+            console.log(data);
+            $.ajax({
+                url: TDFPath + 'hospitalInfoUser/ajax/addHospitalInfoUser',
+                type: 'post',
+                data: data,
+                success: function (res) {
+                    callBackFunc(true, res);
+                },
+                error: function (res) {
+                    callBackFunc(false, res);
+                }
+            });
+        }
+
+        getFilterParam = function (form) {
+
+        }
+
+        layui.use(['form', 'layer', 'table', 'laytpl'], function () {
+            var form = layui.form;
+            var laytpl = layui.laytpl;
+            form.on('submit(sreachBtn)', function (data) {
+                //data.field
+                console.log(data);
+                userTable.reload({
+                    where: data.field
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                })
+            });
+
+            // 表格需要实例化
+            var table = layui.table;
+            //执行一个 table 实例
+            var userTable = table.render({
+                elem: '#hospital'
+                , where: {state: 1}
+                , height: "full-350" //自动适应 - 固定值 （px）
+                , url: TDFPath + 'thesisManage/ajax/listThesis' //数据接口
+                , title: 'Hospital list'
+                , page: true //开启分页
+                , cols: [
+                    [
+                        {field: 'hospitalName', title: 'Hospital Name', minWidth: "150"},
+                        {field: 'loginName', title: 'LoginName', minWidth: "150"},
+                        {
+                            field: 'state',
+                            title: 'IsValid',
+                            align: 'center',
+                            minWidth: "150",
+                            templet: '#switchTpl',
+                            unresize: true
+                        },
+                        {
+                            fixed: 'id',
+                            title: 'OP',
+                            width: "180",
+                            align: 'center',
+                            toolbar: '#barDemo',
+                            fixed: 'right'
+                        }
+                    ]
+                ]
+            });
+            //监听行工具事件
+            table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                var data = obj.data //获得当前行数据
+                    , layEvent = obj.event; //获得 lay-event 对应的值
+                if (layEvent === "detail") {
+                    detailUser(layer, form, data);
+                }
+            });
+
+            // 监听状态操作
+            form.on('switch(sexDemo)', function (obj) {
+                var data = {};
+                data.id = this.value;
+                data.state = obj.elem.checked;
+                $.ajax({
+                    url: TDFPath + 'hospitalInfoUser/ajax/editHospitalInfoUserByState',
+                    type: 'post',
+                    data: data,
+                    success: function (res) {
+                        userTable.reload();
+                    },
+                    error: function (error) {
+                        userTable.reload();
+                    }
+                });
+            });
+
+            //查看明细
+            var detailUser = function (layer, form, data) {
+                console.log(JSON.stringify(data));
+                location.href = TDFPath + "hospitalInfoUser/hospitalInfoUserDetails?id=" + data.id + "&loginname=" + data.loginName + "&password=" + data.password + "&state=" + data.state + "&hospitalid=" + data.hospitalId + "&hospitalname=" + data.hospitalName;
+            }
+
+            // 新增医院
+            $("#btn_addUser").click(function () {
+                layerOpenForm({
+                    title: "Add hospital",
+                    layerobj: layer,
+                    formobj: form,
+                    content: $("#userformDatatml").html(),//使用模板
+                    area: ['550px', '500px'], // 宽高
+                    isAutoClose: false,
+                    btnID: "demoformbtn",
+                    skin: 'demo-class',
+                    successCalbackfn: function (boxJQ, index) {
+                        // TODO 确认密码JS交互
+                        $(".layui-layer-title").css("background-color", "#009688").css("text-align", "center");
+                    },
+                    calbackfn: function (data) {
+                        addUser(data.field, function (isSuccess, res) {
+                            if (isSuccess) {
+                                if (res.code == 0) {
+                                    layer.closeAll();
+                                    layer.msg("Save successfully");
+                                    userTable.reload();
+                                } else {
+                                    layer.msg("Save fail：" + res.msg);
+                                }
+                            } else {
+                                layer.msg("System error, please try again later");
+                            }
+                        });
+                    }
+                })
+            });
+        });
+    </script>
+</th:block>
+</html>

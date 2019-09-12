@@ -111,6 +111,7 @@
                     successCalbackfn: function (boxJQ, index) {
                     },
                     calbackfn: function (data) {
+                        data.field.dictkey = "typemanage_"+$("#dictvalue").val();
                         $.ajax({
                             url: TDFPath + 'sysDict/ajax/updateSysDict',
                             type: 'post',
