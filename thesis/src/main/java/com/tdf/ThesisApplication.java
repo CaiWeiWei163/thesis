@@ -9,7 +9,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication(scanBasePackages = {"com.tdf"}, exclude = SecurityAutoConfiguration.class)
-@MapperScan(basePackages = {"com.tdf.dao.*"})
+@MapperScan(basePackages = {"com.tdf.dao", "com.tdf.dao.*"})
 @ServletComponentScan
 /*war打包方式*/
 public class ThesisApplication extends SpringBootServletInitializer {
