@@ -45,7 +45,7 @@
 		<!-- 	end -->
 	</dependencies>
 	<build>
-	    <finalName>ROOT</finalName>
+	    <finalName>thesis</finalName>
 	</build>
 
 
