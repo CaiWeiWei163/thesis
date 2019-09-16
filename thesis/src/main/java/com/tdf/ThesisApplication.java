@@ -8,7 +8,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication(scanBasePackages = {"com.tdf", "com.tdf.service", "com.tdf.service.sys", "com.tdf.service.thesis"}, exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication(scanBasePackages = {"com.tdf"}, exclude = SecurityAutoConfiguration.class)
 @MapperScan(basePackages = {"com.tdf.dao", "com.tdf.dao.*"})
 @ServletComponentScan
 /*war打包方式*/

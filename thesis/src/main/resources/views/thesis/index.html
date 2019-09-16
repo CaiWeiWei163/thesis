@@ -3,14 +3,6 @@
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="~{_viewStart}">
 <meta charset="utf-8">
-<th:block layout:fragment="styles">
-    <style>
-        html {
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-    </style>
-</th:block>
 <div layout:fragment="mainContent">
     <div class="layui-breadcrumb-box">
         <span class="layui-breadcrumb">
@@ -21,19 +13,33 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header " lay-filter="sreachForm">
                 <div class="layui-form-item">
-                    <div class="layui-inline" style="padding-left: 15px;">
-                        <div class="layui-input-block" style="margin-left:1px;">
-                            <select name="state">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width: 56px;text-align: left;">关键字：</label>
+                        <div class="layui-input-inline">
+                            <select id="guanjianzi" name="guanjianzi" data-key="keywordmanage">
                                 <option value="">请选择</option>
-                                <option value="1" selected="selected">关键字</option>
-                                <option value="2">Invalid</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width: 56px;text-align: left;">作者：</label>
+                        <div class="layui-input-inline">
+                            <select id="author" name="author" data-key="authormanage">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width: 56px;text-align: left;">日期：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" readonly="readonly" name="datesearch" id="datesearch"
+                                   placeholder="日期区间搜索">
                         </div>
                     </div>
                     <div class="layui-inline" style="margin-left: -110px;">
                         <div class="layui-input-block">
-                            <input type="text" name="keyword" id="keyword" placeholder="请输入作者/文献名称/标题/内容/"
-                                   autocomplete="off"
+                            <input type="text" name="keyword" id="keyword" placeholder="请输入作者/文献名称/标题/内容"
+                                   autocomplete="off" style="width:210px;"
                                    class="layui-input">
                         </div>
                     </div>
@@ -44,12 +50,12 @@
                     </div>
                     <div class="layui-inline">
                         <a id="btn_addUser" href="JavaScript:;" class="layui-btn"><i
-                                class="layui-icon layui-icon-add-1 layuiadmin-button-btn"></i>Add</a>
+                                class="layui-icon layui-icon-add-1 layuiadmin-button-btn"></i>添 加</a>
                     </div>
                 </div>
             </div>
             <div class="layui-card-body">
-                <table id="hospital" lay-filter="test"></table>
+                <table id="thesis" lay-filter="test"></table>
             </div>
         </div>
     </div>
@@ -63,7 +69,7 @@
                lay-filter="sexDemo" {{
                d.state== 1 ? 'checked' : '' }}>
     </script>
-    <!--新增医院-->
+    <!--新增论文-->
     <script type="text/html" id="userformDatatml">
         <div class="layui-form" lay-filter="formdata">
             <div class="layui-form-item">
@@ -111,7 +117,7 @@
             </div>
         </div>
     </script>
-    <!--医院详情-->
+    <!--论文详情-->
     <script type="text/html" id="detailUserformDatatml">
         <div class="layui-form" lay-filter="detailFormdata">
             <div class="layui-form-item">
@@ -176,9 +182,11 @@
 
         }
 
-        layui.use(['form', 'layer', 'table', 'laytpl'], function () {
+        layui.use(['form', 'layer', 'table', 'laytpl', 'laydate'], function () {
             var form = layui.form;
             var laytpl = layui.laytpl;
+            var laydate = layui.laydate;
+
             form.on('submit(sreachBtn)', function (data) {
                 //data.field
                 console.log(data);
@@ -190,15 +198,20 @@
                 })
             });
 
+            laydate.render({
+                elem: '#datesearch' //指定元素
+                , range: true
+            });
+
             // 表格需要实例化
             var table = layui.table;
             //执行一个 table 实例
             var userTable = table.render({
-                elem: '#hospital'
-                , where: {state: 1}
+                elem: '#thesis'
+                , where: getFilterParam(form)
                 , height: "full-350" //自动适应 - 固定值 （px）
                 , url: TDFPath + 'thesisManage/ajax/listThesis' //数据接口
-                , title: 'Hospital list'
+                , title: '论文列表'
                 , page: true //开启分页
                 , cols: [
                     [
@@ -245,6 +258,23 @@
                 });
             });
 
+            $(function () {
+                // 绑定多个下拉
+                var ids = [{id: 'guanjianzi', deafalt: null}, {id: 'author', deafalt: null}];
+                loadDataToSelects(ids, form);
+
+                //绑定下拉多个
+                function loadDataToSelects(ids, form) {
+                    $.each(ids, function (index, value) {
+                        var thisParm = $("#" + value.id);
+                        var datakey = thisParm.attr('data-key');
+                        loadDataToSelect(TDFPath + 'thesisManage/ajax/getSysdictData?parentKey=' + datakey, value.id, null, value.deafalt, null, function () {
+                            form.render();
+                        })
+                    });
+                }
+            });
+
             //查看明细
             var detailUser = function (layer, form, data) {
                 console.log(JSON.stringify(data));
@@ -253,35 +283,36 @@
 
             // 新增医院
             $("#btn_addUser").click(function () {
-                layerOpenForm({
-                    title: "Add hospital",
-                    layerobj: layer,
-                    formobj: form,
-                    content: $("#userformDatatml").html(),//使用模板
-                    area: ['550px', '500px'], // 宽高
-                    isAutoClose: false,
-                    btnID: "demoformbtn",
-                    skin: 'demo-class',
-                    successCalbackfn: function (boxJQ, index) {
-                        // TODO 确认密码JS交互
-                        $(".layui-layer-title").css("background-color", "#009688").css("text-align", "center");
-                    },
-                    calbackfn: function (data) {
-                        addUser(data.field, function (isSuccess, res) {
-                            if (isSuccess) {
-                                if (res.code == 0) {
-                                    layer.closeAll();
-                                    layer.msg("Save successfully");
-                                    userTable.reload();
-                                } else {
-                                    layer.msg("Save fail：" + res.msg);
-                                }
-                            } else {
-                                layer.msg("System error, please try again later");
-                            }
-                        });
-                    }
-                })
+                location.href = TDFPath + "thesisManage/ajax/toAddPage";
+                // layerOpenForm({
+                //     title: "Add hospital",
+                //     layerobj: layer,
+                //     formobj: form,
+                //     content: $("#userformDatatml").html(),//使用模板
+                //     area: ['550px', '500px'], // 宽高
+                //     isAutoClose: false,
+                //     btnID: "demoformbtn",
+                //     skin: 'demo-class',
+                //     successCalbackfn: function (boxJQ, index) {
+                //         // TODO 确认密码JS交互
+                //         $(".layui-layer-title").css("background-color", "#009688").css("text-align", "center");
+                //     },
+                //     calbackfn: function (data) {
+                //         addUser(data.field, function (isSuccess, res) {
+                //             if (isSuccess) {
+                //                 if (res.code == 0) {
+                //                     layer.closeAll();
+                //                     layer.msg("Save successfully");
+                //                     userTable.reload();
+                //                 } else {
+                //                     layer.msg("Save fail：" + res.msg);
+                //                 }
+                //             } else {
+                //                 layer.msg("System error, please try again later");
+                //             }
+                //         });
+                //     }
+                // })
             });
         });
     </script>

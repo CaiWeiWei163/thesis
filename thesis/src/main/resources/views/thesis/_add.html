@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="~{_viewStart}">
+<meta charset="utf-8">
+<th:block layout:fragment="styles">
+    <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
+    <!--<link type="text/css" rel="stylesheet" th:href="@{/wangeditor/css/wangEditor.css}"/>-->
+    <!--多选下拉框CSS-->
+    <link type="text/css" rel="stylesheet"
+          th:href="@{/scripts/common/layui/layui_ext/formSelects/formSelects-v4.css}"/>
+    <!--<script type="text/javascript" th:src="@{/wangeditor/script/wangEditor.js}"></script>-->
+</th:block>
+<div layout:fragment="mainContent">
+    <div class="layui-breadcrumb-box">
+        <span class="layui-breadcrumb">
+        <a><cite>论文管理/论文添加</cite></a>
+        </span>
+    </div>
+    <div>
+        <div class="layui-card" style="height: 750px">
+            <div class="layui-card-body">
+                <div class="layui-tab layui-tab-brief">
+                    <div class="layui-tab-content">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label required">论文标题：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="title" lay-verify="required" autocomplete="off"
+                                           style="width: 1100px" placeholder="请输入论文标题" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label required">作者：</label>
+                                <div class="layui-input-block">
+                                    <div class="layui-select-title">
+                                        <div class="lay-ZD-search layui-form-select">
+                                            <div class="layui-select-title">
+                                                <!--<input type="text" name="id" class="layui-input" style="display:none">-->
+                                                <input type="text" placeholder="带搜索的选择框" value="" name="authors"
+                                                       id="author" style="width: 300px"
+                                                       class="layui-input">
+                                            </div>
+                                            <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
+
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label required">分类：</label>
+                                <div class="layui-input-block">
+                                    <div class="layui-select-title">
+                                        <div class="lay-ZD-search layui-form-select">
+                                            <div class="layui-select-title">
+                                                <!--<input type="text" name="id" class="layui-input" style="display:none">-->
+                                                <input type="text" placeholder="带搜索的选择框" value="" name="type"
+                                                       id="type" style="width: 300px"
+                                                       class="layui-input">
+                                            </div>
+                                            <dl class="layui-anim layui-anim-upbit" id="pull_down_type">
+
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label required">关键字：</label>
+                                <div class="layui-input-block">
+                                    <div class="layui-select-title">
+                                        <div class="lay-ZD-search layui-form-select">
+                                            <div class="layui-select-title">
+                                                <!--<input type="text" name="id" class="layui-input" style="display:none">-->
+                                                <input type="text" placeholder="带搜索的选择框" value="" name="authors"
+                                                       id="author" style="width: 300px"
+                                                       class="layui-input">
+                                            </div>
+                                            <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
+
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label required">引证文献：</label>
+                                <div class="layui-input-block">
+                                    <div class="layui-select-title">
+                                        <div class="lay-ZD-search layui-form-select">
+                                            <div class="layui-select-title">
+                                                <!--<input type="text" name="id" class="layui-input" style="display:none">-->
+                                                <input type="text" placeholder="带搜索的选择框" value="" name="authors"
+                                                       id="author" style="width: 300px"
+                                                       class="layui-input">
+                                            </div>
+                                            <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
+
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label required">摘要：</label>
+                                <div class="layui-input-block">
+                                    <textarea placeholder="请输入内容" class="layui-textarea" style="width: 1100px">
+
+                                    </textarea>
+                                </div>
+                            </div>
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label required">论文内容：</label>
+                                <div class="layui-input-block">
+                                    <div id="content"></div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">保 存
+                                    </button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重 置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        $(function () {
+            layui.use(['form', 'layer', 'table', 'laytpl', 'element', 'formSelects', 'upload'], function () {
+                var form = layui.form;
+                var laytpl = layui.laytpl;
+                var table = layui.table;
+                var layer = layui.layer;
+                var upload = layui.upload;
+
+                $("input").on("click", function () {
+                    var id = $(this).attr("id");
+                    if (id == "author") {
+                        setTimeout(function () {
+                            getFuzzySearch(form, id, "pull_down_author");
+                        }, 200);
+                    }
+                    if (id == "type") {
+                        setTimeout(function () {
+                            getFuzzySearch(form, id, "pull_down_type");
+                        }, 200);
+                    }
+                    if (id == "keyword") {
+                        setTimeout(function () {
+                            getFuzzySearch(form, id, "pull_down_keyword");
+                        }, 200);
+                    }
+                    if (id == "literature") {
+                        setTimeout(function () {
+                            getFuzzySearch(form, id, "pull_down_literature");
+                        }, 200);
+                    }
+                });
+
+                function getFuzzySearch(form, id, pulldown) {
+                    $(".lay-ZD-search input").off().on("keyup", function () {
+                        $("#" + pulldown).empty();
+                        var str = "";
+                        $(this).parents(".lay-ZD-search").addClass("layui-form-selected");
+                        var search = $(this).val();
+                        $.ajax({
+                            url: TDFPath + 'thesisManage/ajax/fuzzySearch',
+                            type: 'post',
+                            data: {search: search, type: id},
+                            success: function (res) {
+                                $.each(res, function (i, item) {
+                                    str += '<dd lay-value="' + item.dictvalue + '" class="">' + item.dictvalue + '</dd>'
+                                })
+                                $("#" + pulldown).append(str);
+                            },
+                            error: function (error) {
+                                layer.alert("获取数据失败")
+                            }
+                        });
+                    }).on("click", function () {
+                        $(this).trigger("keyup");
+                    })
+                }
+            });
+        });
+    </script>
+</th:block>
+</html>

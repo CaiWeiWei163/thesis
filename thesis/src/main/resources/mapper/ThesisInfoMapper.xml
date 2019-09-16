@@ -33,8 +33,36 @@
         count(1)
         FROM
         thesis_info
-        where thesis_info.state != 2
+        <where>
+            thesis_info.state != 2
+            <if test="map.author!=null and map.author!=''">
+                and thesis_info.author = #{map.author,jdbcType=VARCHAR}
+            </if>
+            <if test="map.guanjianzi!=null and map.keyword!=''">
+                and thesis_info.keyword = #{map.guanjianzi,jdbcType=VARCHAR}
+            </if>
+            <if test="map.keyword!=null and map.keyword!=''">
+                and (
+                thesis_info.author like
+                concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
+                or
+                thesis_info.literature like
+                concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
+                or
+                thesis_info.title like
+                concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
+                or
+                thesis_info.content like
+                concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
+                )
+            </if>
+            <if test="map.datesearch!=null">
+                and (thesis_info.create_time between #{map.datesearchstart,jdbcType=TIMESTAMP} and
+                #{map.datesearchend,jdbcType=TIMESTAMP})
+            </if>
+        </where>
     </select>
+
     <!--论文列表-->
     <select id="listThesis" resultType="com.tdf.entity.ThesisInfo">
         SELECT
@@ -43,10 +71,70 @@
         <include refid="Blob_Column_List"/>
         FROM
         thesis_info
-        where thesis_info.state != 2
+        <where>
+            thesis_info.state != 2
+            <if test="map.author!=null and map.author!=''">
+                and thesis_info.author = #{map.author,jdbcType=VARCHAR}
+            </if>
+            <if test="map.guanjianzi!=null and map.keyword!=''">
+                and thesis_info.keyword = #{map.guanjianzi,jdbcType=VARCHAR}
+            </if>
+            <if test="map.keyword!=null and map.keyword!=''">
+                and (
+                thesis_info.author like
+                concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
+                or
+                thesis_info.literature like
+                concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
+                or
+                thesis_info.title like
+                concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
+                or
+                thesis_info.content like
+                concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
+                )
+            </if>
+            <if test="map.datesearch!=null">
+                and (thesis_info.create_time between #{map.datesearchstart,jdbcType=TIMESTAMP} and
+                #{map.datesearchend,jdbcType=TIMESTAMP})
+            </if>
+        </where>
         order by thesis_info.create_time desc
         <if test="pageSize>0">
             limit #{topIndex},#{pageSize}
+        </if>
+    </select>
+
+    <!--根据父级key查询子级列表-->
+    <select id="selectSysDictByParentKey" resultMap="com.tdf.dao.sys.SysDictMapper.BaseResultMap">
+        select
+        s.*
+        from sysdict s
+        <where>
+            s.state=1 and s.dictParentKey=#{dictParentKey}
+        </where>
+    </select>
+
+    <!--模糊搜索-->
+    <select id="fuzzySearch" resultType="com.tdf.entity.sys.SysDict">
+        SELECT
+        dictkey,
+        dictValue
+        FROM
+        sysdict
+        WHERE
+        dictValue LIKE CONCAT('%',#{search,jdbcType=VARCHAR},'%')
+        <if test="type == 'author'">
+            and dictParentKey = 'authormanage'
+        </if>
+        <if test="type == 'type'">
+            and dictParentKey = 'typemanage'
+        </if>
+        <if test="type == 'keyword'">
+            and dictParentKey = 'keywordmanage'
+        </if>
+        <if test="type == 'literature'">
+            and dictParentKey = 'literaturemanage'
         </if>
     </select>
 
