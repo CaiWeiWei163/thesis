@@ -7,12 +7,14 @@
     <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
     <!--<link type="text/css" rel="stylesheet" th:href="@{/scripts/common/inputTags.css}"/>-->
-    <link type="text/css" rel="stylesheet" href="inputTags.css"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/tag.css}"/>
     <!--<link type="text/css" rel="stylesheet" th:href="@{/wangeditor/css/wangEditor.css}"/>-->
     <!--多选下拉框CSS-->
     <link type="text/css" rel="stylesheet"
           th:href="@{/scripts/common/layui/layui_ext/formSelects/formSelects-v4.css}"/>
     <!--<script type="text/javascript" th:src="@{/wangeditor/script/wangEditor.js}"></script>-->
+    <!--<script type="text/javascript" th:src="@{/scripts/common/layui/layui_ext/inputTags/inputTags.js}"></script>-->
+    <script type="text/javascript" th:src="@{/scripts/common/tag.js}"></script>
 </th:block>
 <div layout:fragment="mainContent">
     <div class="layui-breadcrumb-box">
@@ -38,21 +40,14 @@
                                 <div class="layui-input-block">
                                     <div class="lay-ZD-search layui-form-select">
                                         <div class="layui-select-title">
-                                            <div class="tags" id="tags">
-                                                <input type="text" name="" id="inputTags" placeholder="回车生成标签"
-                                                       autocomplete="off">
-                                            </div>
                                             <!--<input type="text" name="id" class="layui-input" style="display:none">-->
-                                            <input type="text" placeholder="带搜索的选择框" value="" name="author"
-                                                   id="author" style="width: 300px"
-                                                   class="layui-input">
-                                            <!--<i class="layui-icon layui-icon-add-1" style="font-size:30px"> </i>-->
+                                            <input type="hidden" id="authorhidden">
+                                            <input type="text" id="author">
                                         </div>
                                         <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
 
                                         </dl>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -62,6 +57,7 @@
                                         <div class="lay-ZD-search layui-form-select">
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
+                                                <input type="hidden" id="typehidden">
                                                 <input type="text" placeholder="带搜索的选择框" value="" name="type"
                                                        id="type" style="width: 300px"
                                                        class="layui-input">
@@ -80,11 +76,12 @@
                                         <div class="lay-ZD-search layui-form-select">
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
+                                                <input type="hidden" id="keywordhidden">
                                                 <input type="text" placeholder="带搜索的选择框" value="" name="keyword"
                                                        id="keyword" style="width: 300px"
                                                        class="layui-input">
                                             </div>
-                                            <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
+                                            <dl class="layui-anim layui-anim-upbit" id="pull_down_keyword">
 
                                             </dl>
                                         </div>
@@ -98,11 +95,12 @@
                                         <div class="lay-ZD-search layui-form-select">
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
+                                                <input type="hidden" id="literaturehidden">
                                                 <input type="text" placeholder="带搜索的选择框" value="" name="literature"
                                                        id="literature" style="width: 300px"
                                                        class="layui-input">
                                             </div>
-                                            <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
+                                            <dl class="layui-anim layui-anim-upbit" id="pull_down_literature">
 
                                             </dl>
                                         </div>
@@ -124,8 +122,16 @@
                                 </div>
                             </div>
                             <div class="layui-form-item">
+                                <label class="layui-form-label">论文原文件：</label>
                                 <div class="layui-input-block">
-                                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">保 存
+                                    <button type="button" class="layui-btn" id="upload">
+                                        <i class="layui-icon">&#xe67c;</i>选择文件
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="button" class="layui-btn" lay-filter="demo1">保 存
                                     </button>
                                     <button type="reset" class="layui-btn layui-btn-primary">重 置</button>
                                 </div>
@@ -139,55 +145,64 @@
 </div>
 
 <th:block layout:fragment="scripts">
-    <script type="text/javascript" src="inputTags.js"></script>
     <script>
         $(function () {
-            layui.use(['form', 'layer', 'table', 'laytpl', 'element', 'formSelects', 'upload', 'inputTags'], function () {
+            layui.use(['form', 'layer', 'table', 'laytpl', 'element', 'formSelects', 'upload'], function () {
                 var form = layui.form;
                 var laytpl = layui.laytpl;
                 var table = layui.table;
                 var layer = layui.layer;
                 var upload = layui.upload;
 
-                var inputTags = layui.inputTags;
-                inputTags.render({
-                    elem: '#inputTags',//定义输入框input对象
-                    content: ['标题一', '标题二'],//默认标签
-                    aldaBtn: true,//是否开启获取所有数据的按钮
-                    done: function (value) { //回车后的回调
-                        console.log(value)
-                    }
-                })
+                //添加标签-作者
+                var tagAuthor = new Tag("author");
+                tagAuthor.initView();
 
+                //添加标签-分类
+                var tagType = new Tag("type");
+                tagType.initView();
+
+                //添加标签-关键字
+                var tagKeyword = new Tag("keyword");
+                tagKeyword.initView();
+
+                //添加标签-引证文献
+                var tagLiterature = new Tag("literature");
+                tagLiterature.initView();
+
+                // 模糊查询
                 $("input").on("click", function () {
-                    var id = $(this).attr("id");
-                    if (id == "author") {
+                    var idhidden = $(this).parent().prev().prev().attr("id");
+                    console.log(idhidden);
+                    if (idhidden == "authorhidden") {
                         setTimeout(function () {
-                            getFuzzySearch(form, id, "pull_down_author");
+                            getFuzzySearch(form, "author", "pull_down_author");
                             form.render();
                         }, 200);
                     }
-                    if (id == "type") {
+                    if (idhidden == "typehidden") {
                         setTimeout(function () {
-                            getFuzzySearch(form, id, "pull_down_type");
+                            getFuzzySearch(form, "type", "pull_down_type");
                             form.render();
                         }, 200);
                     }
-                    if (id == "keyword") {
+                    if (idhidden == "keywordhidden") {
                         setTimeout(function () {
-                            getFuzzySearch(form, id, "pull_down_keyword");
+                            getFuzzySearch(form, "keyword", "pull_down_keyword");
                             form.render();
                         }, 200);
                     }
-                    if (id == "literature") {
+                    if (idhidden == "literaturehidden") {
                         setTimeout(function () {
-                            getFuzzySearch(form, id, "pull_down_literature");
+                            getFuzzySearch(form, "literature", "pull_down_literature");
                             form.render();
                         }, 200);
                     }
                 });
 
                 function getFuzzySearch(form, id, pulldown) {
+                    console.log("id:");
+                    console.log(id);
                     $(".lay-ZD-search input").off().on("keyup", function () {
                         $("#" + pulldown).empty();
                         var str = "";
@@ -203,7 +218,7 @@
                                 })
                                 $("#" + pulldown).append(str);
                                 $("dd").on("click", function () {
-                                    $(".lay-ZD-search input[id='" + id + "']").val($(this).attr("lay-value"));
+                                    $("input[id='" + id + "']").next().children().val($(this).attr("lay-value"));
                                     $("#" + pulldown).hide();
                                 });
                             },

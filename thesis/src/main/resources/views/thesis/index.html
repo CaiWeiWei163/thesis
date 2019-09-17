@@ -275,44 +275,15 @@
                 }
             });
 
-            //查看明细
+            // 查看明细
             var detailUser = function (layer, form, data) {
                 console.log(JSON.stringify(data));
                 location.href = TDFPath + "hospitalInfoUser/hospitalInfoUserDetails?id=" + data.id + "&loginname=" + data.loginName + "&password=" + data.password + "&state=" + data.state + "&hospitalid=" + data.hospitalId + "&hospitalname=" + data.hospitalName;
             }
 
-            // 新增医院
+            // 添加论文
             $("#btn_addUser").click(function () {
                 location.href = TDFPath + "thesisManage/ajax/toAddPage";
-                // layerOpenForm({
-                //     title: "Add hospital",
-                //     layerobj: layer,
-                //     formobj: form,
-                //     content: $("#userformDatatml").html(),//使用模板
-                //     area: ['550px', '500px'], // 宽高
-                //     isAutoClose: false,
-                //     btnID: "demoformbtn",
-                //     skin: 'demo-class',
-                //     successCalbackfn: function (boxJQ, index) {
-                //         // TODO 确认密码JS交互
-                //         $(".layui-layer-title").css("background-color", "#009688").css("text-align", "center");
-                //     },
-                //     calbackfn: function (data) {
-                //         addUser(data.field, function (isSuccess, res) {
-                //             if (isSuccess) {
-                //                 if (res.code == 0) {
-                //                     layer.closeAll();
-                //                     layer.msg("Save successfully");
-                //                     userTable.reload();
-                //                 } else {
-                //                     layer.msg("Save fail：" + res.msg);
-                //                 }
-                //             } else {
-                //                 layer.msg("System error, please try again later");
-                //             }
-                //         });
-                //     }
-                // })
             });
         });
     </script>
