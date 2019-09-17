@@ -61,7 +61,7 @@
     </div>
 
     <script type="text/html" id="barDemo">
-        <a class="layui-btn" lay-event="detail">编辑</a>
+        <a class="layui-btn" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger" lay-event="download">下载</a>
     </script>
     <script type="text/html" id="switchTpl">
@@ -69,90 +69,6 @@
                lay-filter="sexDemo" {{
                d.state== 1 ? 'checked' : '' }}>
     </script>
-    <!--新增论文-->
-    <script type="text/html" id="userformDatatml">
-        <div class="layui-form" lay-filter="formdata">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 125px">Hospital name</label>
-                <div class="layui-input-block">
-                    <input type="text" name="hospitalName" lay-verify="required" autocomplete="off" style="width: 300px"
-                           placeholder="Please enter the name of the hospital" th:maxlength="50"
-                           class="layui-input layui-input-alert">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 125px">Hospital loginName</label>
-                <div class="layui-input-block">
-                    <input type="text" name="loginName" lay-verify="required" autocomplete="off" style="width: 300px"
-                           placeholder="Please enter your account number" th:maxlength="50" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 125px">Hospital password</label>
-                <div class="layui-input-block">
-                    <input type="password" name="password" id="password" lay-verify="required" autocomplete="off"
-                           style="width: 300px"
-                           placeholder="Please enter your account password" th:maxlength="50" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 125px">Confirm password</label>
-                <div class="layui-input-block">
-                    <input type="password" id="affirmpassword" lay-verify="required" autocomplete="off"
-                           style="width: 300px"
-                           placeholder="Please confirm the password again" th:maxlength="50" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 125px">IsValid</label>
-                <div class="layui-input-block">
-                    <input type="checkbox" name="state" value="1" lay-verify="required"
-                           lay-skin="switch" checked>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="demoformbtn">Save</button>
-                </div>
-            </div>
-        </div>
-    </script>
-    <!--论文详情-->
-    <script type="text/html" id="detailUserformDatatml">
-        <div class="layui-form" lay-filter="detailFormdata">
-            <div class="layui-form-item">
-                <label class="layui-form-label">Hospital name</label>
-                <div class="layui-input-block">
-                    <input type="hidden" name="id">
-                    <input type="text" name="hospitalName" disabled="disabled" style="border:none;"
-                           lay-verify="required" autocomplete="off" maxlength="50" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">Hospital loginName</label>
-                <div class="layui-input-block">
-                    <input type="text" name="loginName" disabled="disabled" style="border:none;"
-                           lay-verify="required" autocomplete="off" maxlength="50" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">Password</label>
-                <div class="layui-input-block">
-                    <input type="text" name="password" disabled="disabled" style="border:none;" lay-verify="required"
-                           autocomplete="off" maxlength="50" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">IsValid</label>
-                <div class="layui-input-block">
-                    <input type="checkbox" name="state" lay-verify="required" lay-skin="switch" disabled>
-                    <!--<input type="text" name="state" disabled="disabled" style="border:none;" lay-verify="required"-->
-                    <!--autocomplete="off" maxlength="200" class="layui-input">-->
-                </div>
-            </div>
-        </div>
-    </script>
-
 </div>
 
 <th:block layout:fragment="scripts">
@@ -235,8 +151,10 @@
             table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
                 var data = obj.data //获得当前行数据
                     , layEvent = obj.event; //获得 lay-event 对应的值
-                if (layEvent === "detail") {
-                    detailUser(layer, form, data);
+                if (layEvent === "edit") {
+                    editThesis(layer, form, data);
+                } else if (layEvent === "download") {
+                    download(layer, form, data);
                 }
             });
 
@@ -275,16 +193,15 @@
                 }
             });
 
-            // 查看明细
-            var detailUser = function (layer, form, data) {
-                console.log(JSON.stringify(data));
-                location.href = TDFPath + "hospitalInfoUser/hospitalInfoUserDetails?id=" + data.id + "&loginname=" + data.loginName + "&password=" + data.password + "&state=" + data.state + "&hospitalid=" + data.hospitalId + "&hospitalname=" + data.hospitalName;
-            }
-
             // 添加论文
             $("#btn_addUser").click(function () {
                 location.href = TDFPath + "thesisManage/ajax/toAddPage";
             });
+
+            // 编辑论文
+            function editThesis(layer, form, data) {
+                location.href = TDFPath + "thesisManage/ajax/toEditPage?id=" + data.id;
+            }
         });
     </script>
 </th:block>

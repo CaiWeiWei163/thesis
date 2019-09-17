@@ -68,6 +68,50 @@ public class ThesisManageController extends BaseController {
     }
 
     /**
+     * 添加论文
+     *
+     * @param thesisInfo
+     * @return
+     */
+    @RequestMapping(value = "/ajax/addThesis", method = RequestMethod.POST)
+    public ActionResult addThesis(ThesisInfo thesisInfo) {
+        try {
+            thesisManageService.addThesis(thesisInfo);
+            return success();
+        } catch (KnowException e) {
+            return fail(e.getMessage());
+        }
+    }
+
+    /**
+     * 跳转到编辑页面
+     */
+    @RequestMapping("/ajax/toEditPage")
+    public ModelAndView toEditPage(String id) {
+        ModelAndView mv = new ModelAndView();
+        ThesisInfo thesis = thesisManageService.getThesisInfoById(id);
+        mv.addObject("thesis", thesis);
+        mv.setViewName("thesis/_edit");
+        return mv;
+    }
+
+    /**
+     * 编辑论文
+     *
+     * @param thesisInfo
+     * @return
+     */
+    @RequestMapping(value = "/ajax/editThesis", method = RequestMethod.POST)
+    public ActionResult editThesis(ThesisInfo thesisInfo) {
+        try {
+            thesisManageService.editThesis(thesisInfo);
+            return success();
+        } catch (KnowException e) {
+            return fail(e.getMessage());
+        }
+    }
+
+    /**
      * 根据父级key查询子级列表
      *
      * @return

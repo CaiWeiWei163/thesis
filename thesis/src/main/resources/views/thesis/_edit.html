@@ -31,7 +31,9 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label required">论文标题：</label>
                                 <div class="layui-input-block">
-                                    <input type="text" name="title" lay-verify="required" autocomplete="off"
+                                    <input type="hidden" name="id" th:value="${thesis.id}">
+                                    <input type="text" name="title" th:value="${thesis.title}" lay-verify="required"
+                                           autocomplete="off"
                                            style="width: 1100px" placeholder="请输入论文标题" class="layui-input">
                                 </div>
                             </div>
@@ -104,7 +106,8 @@
                             <div class="layui-form-item layui-form-text">
                                 <label class="layui-form-label required">摘要：</label>
                                 <div class="layui-input-block">
-                                    <textarea placeholder="请输入内容" name="abstractContent" class="layui-textarea"
+                                    <textarea placeholder="请输入内容" name="abstractContent"
+                                              th:text="${thesis.abstractContent}" class="layui-textarea"
                                               style="width: 1100px">
                                     </textarea>
                                 </div>
@@ -112,7 +115,8 @@
                             <div class="layui-form-item layui-form-text">
                                 <label class="layui-form-label required">论文内容：</label>
                                 <div class="layui-input-block">
-                                    <textarea placeholder="请输入内容" name="content" class="layui-textarea"
+                                    <textarea placeholder="请输入内容" name="content" th:text="${thesis.content}"
+                                              class="layui-textarea"
                                               style="width: 1100px">
                                     </textarea>
                                 </div>
@@ -123,6 +127,7 @@
                                     <button type="button" class="layui-btn" id="upload">
                                         <i class="layui-icon">&#xe67c;</i>选择文件
                                     </button>&nbsp;&nbsp;
+                                    <input type="hidden" th:value="${thesis.fileinfoId}">
                                     <strong><span id="filename" style="color: #009688;"></span></strong>
                                 </div>
                             </div>
@@ -250,7 +255,7 @@
                     var data = $("#addThesisForm").SerializeJson();
                     console.log("data:");
                     console.log(data);
-                    sendAjax(layer, null, table, 'thesisManage/ajax/addThesis', 'POST', null, data, function (res) {
+                    sendAjax(layer, null, table, 'thesisManage/ajax/editThesis', 'POST', null, data, function (res) {
                         if (res.code == 0) {
                             layer.msg('添加论文成功！');
                             location.href = TDFPath + "thesisManage/index";

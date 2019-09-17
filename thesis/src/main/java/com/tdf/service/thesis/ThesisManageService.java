@@ -1,14 +1,17 @@
 package com.tdf.service.thesis;
 
+import com.tdf.common.ContextHolder;
 import com.tdf.dao.ThesisInfoMapper;
 import com.tdf.entity.ThesisInfo;
 import com.tdf.entity.criteria.ThesisInfoCriteria;
 import com.tdf.entity.sys.SysDict;
+import com.tdf.util.StringUuid;
 import com.tdf.util.page.PagedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +52,29 @@ public class ThesisManageService {
         return new PagedList<>(list, criteria.getPageNo(), total);
     }
 
+    /**
+     * 添加论文
+     *
+     * @param thesisInfo
+     */
+    public void addThesis(ThesisInfo thesisInfo) {
+        thesisInfo.setId(StringUuid.getUuid());
+        thesisInfo.setCreateTime(new Date());
+        thesisInfo.setCreateUser(ContextHolder.getLoginSysUserInfo().getRealname());
+        thesisInfoMapper.insertSelective(thesisInfo);
+    }
+
+    /**
+     * 编辑论文
+     *
+     * @param thesisInfo
+     */
+    public void editThesis(ThesisInfo thesisInfo) {
+        thesisInfo.setUpdateTime(new Date());
+        thesisInfo.setUpdateUser(ContextHolder.getLoginSysUserInfo().getRealname());
+        thesisInfoMapper.updateByPrimaryKeySelective(thesisInfo);
+    }
+
     // 根据父级key查询子级列表
     public List<SysDict> selectSysDictByParentKey(String dictParentKey) {
         return thesisInfoMapper.selectSysDictByParentKey(dictParentKey);
@@ -65,4 +91,12 @@ public class ThesisManageService {
         return list;
     }
 
+    /**
+     * 根据id查询信息
+     *
+     * @param id
+     */
+    public ThesisInfo getThesisInfoById(String id) {
+        return thesisInfoMapper.selectByPrimaryKey(id);
+    }
 }
