@@ -1,21 +1,27 @@
 package com.tdf.controller;
 
+import com.tdf.common.ContextHolder;
 import com.tdf.controller.base.BaseController;
 import com.tdf.entity.ThesisInfo;
 import com.tdf.entity.criteria.ThesisInfoCriteria;
+import com.tdf.entity.model.FileModel;
 import com.tdf.entity.model.SimpleModel;
 import com.tdf.entity.sys.SysDict;
 import com.tdf.models.LayuiDataTableModel;
 import com.tdf.service.thesis.ThesisManageService;
+import com.tdf.service.fileUploadService.FileUploadService;
 import com.tdf.util.exceptions.KnowException;
 import com.tdf.util.page.PagedList;
 import com.tdf.util.web.ActionResult;
+import org.apache.commons.io.FileUtils;
+import org.apache.tomcat.jni.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +37,9 @@ public class ThesisManageController extends BaseController {
 
     @Autowired
     ThesisManageService thesisManageService;
+
+    @Autowired
+    FileUploadService fileUploadService;
 
     // 论文首页
     @RequestMapping({"", "/index"})
@@ -84,9 +93,27 @@ public class ThesisManageController extends BaseController {
 
     // 根据名字模糊查询
     @RequestMapping("/ajax/fuzzySearch")
-    public List<SysDict> fuzzySearch(String search,String type) {
-        List<SysDict> list = thesisManageService.fuzzySearch(search,type);
+    public List<SysDict> fuzzySearch(String search, String type) {
+        List<SysDict> list = thesisManageService.fuzzySearch(search, type);
         return list;
+    }
+
+    /**
+     * 上传论文原文件
+     *
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @ResponseBody
+    public ActionResult uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            String fileName = fileUploadService.fileUpload(file, null);
+            return success(fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return fail("上传失败");
+        }
     }
 
 }

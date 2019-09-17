@@ -110,15 +110,17 @@
                             <div class="layui-form-item layui-form-text">
                                 <label class="layui-form-label required">摘要：</label>
                                 <div class="layui-input-block">
-                                    <textarea placeholder="请输入内容" class="layui-textarea" style="width: 1100px">
-
+                                    <textarea placeholder="请输入内容" name="abstract_content" class="layui-textarea"
+                                              style="width: 1100px">
                                     </textarea>
                                 </div>
                             </div>
                             <div class="layui-form-item layui-form-text">
                                 <label class="layui-form-label required">论文内容：</label>
                                 <div class="layui-input-block">
-                                    <div id="content"></div>
+                                    <textarea placeholder="请输入内容" name="content" class="layui-textarea"
+                                              style="width: 1100px">
+                                    </textarea>
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -126,7 +128,8 @@
                                 <div class="layui-input-block">
                                     <button type="button" class="layui-btn" id="upload">
                                         <i class="layui-icon">&#xe67c;</i>选择文件
-                                    </button>
+                                    </button>&nbsp;&nbsp;
+                                    <strong><span id="filename" style="color: #009688;"></span></strong>
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -228,6 +231,26 @@
                         $(this).trigger("keyup");
                     })
                 }
+
+                upload.render({
+                    type: 'post',
+                    elem: '#upload'
+                    , accept: 'file'
+                    , url: TDFPath + 'thesisManage/uploadFile' // 上传接口
+                    , done: function (res) {
+                        //请求正常回调
+                        if (res.code == 0) {
+                            console.log(res);
+                            $("#filename").html(res.msg);
+                            layer.msg("上传成功！");
+                        }
+                    }
+                    , error: function (res) {
+                        //请求异常回调
+                        layer.msg("上传失败，请稍后重试！");
+                    }
+                });
+
             });
         });
     </script>
