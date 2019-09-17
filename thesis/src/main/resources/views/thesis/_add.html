@@ -6,6 +6,8 @@
 <th:block layout:fragment="styles">
     <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
+    <!--<link type="text/css" rel="stylesheet" th:href="@{/scripts/common/inputTags.css}"/>-->
+    <link type="text/css" rel="stylesheet" href="inputTags.css"/>
     <!--<link type="text/css" rel="stylesheet" th:href="@{/wangeditor/css/wangEditor.css}"/>-->
     <!--多选下拉框CSS-->
     <link type="text/css" rel="stylesheet"
@@ -34,19 +36,23 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label required">作者：</label>
                                 <div class="layui-input-block">
-                                    <div class="layui-select-title">
-                                        <div class="lay-ZD-search layui-form-select">
-                                            <div class="layui-select-title">
-                                                <!--<input type="text" name="id" class="layui-input" style="display:none">-->
-                                                <input type="text" placeholder="带搜索的选择框" value="" name="authors"
-                                                       id="author" style="width: 300px"
-                                                       class="layui-input">
+                                    <div class="lay-ZD-search layui-form-select">
+                                        <div class="layui-select-title">
+                                            <div class="tags" id="tags">
+                                                <input type="text" name="" id="inputTags" placeholder="回车生成标签"
+                                                       autocomplete="off">
                                             </div>
-                                            <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
-
-                                            </dl>
+                                            <!--<input type="text" name="id" class="layui-input" style="display:none">-->
+                                            <input type="text" placeholder="带搜索的选择框" value="" name="author"
+                                                   id="author" style="width: 300px"
+                                                   class="layui-input">
+                                            <!--<i class="layui-icon layui-icon-add-1" style="font-size:30px"> </i>-->
                                         </div>
+                                        <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
+
+                                        </dl>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -74,8 +80,8 @@
                                         <div class="lay-ZD-search layui-form-select">
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
-                                                <input type="text" placeholder="带搜索的选择框" value="" name="authors"
-                                                       id="author" style="width: 300px"
+                                                <input type="text" placeholder="带搜索的选择框" value="" name="keyword"
+                                                       id="keyword" style="width: 300px"
                                                        class="layui-input">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
@@ -92,8 +98,8 @@
                                         <div class="lay-ZD-search layui-form-select">
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
-                                                <input type="text" placeholder="带搜索的选择框" value="" name="authors"
-                                                       id="author" style="width: 300px"
+                                                <input type="text" placeholder="带搜索的选择框" value="" name="literature"
+                                                       id="literature" style="width: 300px"
                                                        class="layui-input">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
@@ -133,35 +139,50 @@
 </div>
 
 <th:block layout:fragment="scripts">
+    <script type="text/javascript" src="inputTags.js"></script>
     <script>
         $(function () {
-            layui.use(['form', 'layer', 'table', 'laytpl', 'element', 'formSelects', 'upload'], function () {
+            layui.use(['form', 'layer', 'table', 'laytpl', 'element', 'formSelects', 'upload', 'inputTags'], function () {
                 var form = layui.form;
                 var laytpl = layui.laytpl;
                 var table = layui.table;
                 var layer = layui.layer;
                 var upload = layui.upload;
 
+                var inputTags = layui.inputTags;
+                inputTags.render({
+                    elem: '#inputTags',//定义输入框input对象
+                    content: ['标题一', '标题二'],//默认标签
+                    aldaBtn: true,//是否开启获取所有数据的按钮
+                    done: function (value) { //回车后的回调
+                        console.log(value)
+                    }
+                })
+
                 $("input").on("click", function () {
                     var id = $(this).attr("id");
                     if (id == "author") {
                         setTimeout(function () {
                             getFuzzySearch(form, id, "pull_down_author");
+                            form.render();
                         }, 200);
                     }
                     if (id == "type") {
                         setTimeout(function () {
                             getFuzzySearch(form, id, "pull_down_type");
+                            form.render();
                         }, 200);
                     }
                     if (id == "keyword") {
                         setTimeout(function () {
                             getFuzzySearch(form, id, "pull_down_keyword");
+                            form.render();
                         }, 200);
                     }
                     if (id == "literature") {
                         setTimeout(function () {
                             getFuzzySearch(form, id, "pull_down_literature");
+                            form.render();
                         }, 200);
                     }
                 });
@@ -181,6 +202,10 @@
                                     str += '<dd lay-value="' + item.dictvalue + '" class="">' + item.dictvalue + '</dd>'
                                 })
                                 $("#" + pulldown).append(str);
+                                $("dd").on("click", function () {
+                                    $(".lay-ZD-search input[id='" + id + "']").val($(this).attr("lay-value"));
+                                    $("#" + pulldown).hide();
+                                });
                             },
                             error: function (error) {
                                 layer.alert("获取数据失败")
