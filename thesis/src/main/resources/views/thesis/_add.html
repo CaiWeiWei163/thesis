@@ -201,9 +201,7 @@
                 });
 
                 function getFuzzySearch(form, id, pulldown) {
-                    console.log("id:");
-                    console.log(id);
-                    $(".lay-ZD-search input").off().on("keyup", function () {
+                    $(".lay-ZD-search input").on("keyup", function () {
                         $("#" + pulldown).empty();
                         var str = "";
                         $(this).parents(".lay-ZD-search").addClass("layui-form-selected");
