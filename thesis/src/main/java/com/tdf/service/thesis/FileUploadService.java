@@ -29,7 +29,7 @@ public class FileUploadService {
     private Environment env; //读取配置文件
 
     /**
-     * 保存图片 不需要保存数据库表
+     * 不需要保存数据库表
      *
      * @param file       文件
      * @param folderName 文件夹名称

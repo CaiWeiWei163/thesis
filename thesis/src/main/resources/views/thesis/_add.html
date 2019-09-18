@@ -8,13 +8,12 @@
     <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
     <!--<link type="text/css" rel="stylesheet" th:href="@{/scripts/common/inputTags.css}"/>-->
     <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/tag.css}"/>
-    <!--<link type="text/css" rel="stylesheet" th:href="@{/wangeditor/css/wangEditor.css}"/>-->
     <!--多选下拉框CSS-->
     <link type="text/css" rel="stylesheet"
           th:href="@{/scripts/common/layui/layui_ext/formSelects/formSelects-v4.css}"/>
-    <!--<script type="text/javascript" th:src="@{/wangeditor/script/wangEditor.js}"></script>-->
     <!--<script type="text/javascript" th:src="@{/scripts/common/layui/layui_ext/inputTags/inputTags.js}"></script>-->
     <script type="text/javascript" th:src="@{/scripts/common/tag.js}"></script>
+    <script type="text/javascript" th:src="@{/scripts/common/ckeditor/ckeditor.js}"></script>
 </th:block>
 <div layout:fragment="mainContent">
     <div class="layui-breadcrumb-box">
@@ -42,7 +41,7 @@
                                         <div class="layui-select-title">
                                             <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                             <input type="hidden" id="authorhidden">
-                                            <input type="text" id="author">
+                                            <input type="hidden" id="author" name="author">
                                         </div>
                                         <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
 
@@ -58,7 +57,7 @@
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                                 <input type="hidden" id="typehidden">
-                                                <input type="text" id="type">
+                                                <input type="hidden" id="type" name="type">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_type">
 
@@ -75,7 +74,7 @@
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                                 <input type="hidden" id="keywordhidden">
-                                                <input type="text" id="keyword">
+                                                <input type="hidden" id="keyword" name="keyword">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_keyword">
 
@@ -92,7 +91,7 @@
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                                 <input type="hidden" id="literaturehidden">
-                                                <input type="text" id="literature">
+                                                <input type="hidden" id="literature" name="literature">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_literature">
 
@@ -104,7 +103,8 @@
                             <div class="layui-form-item layui-form-text">
                                 <label class="layui-form-label required">摘要：</label>
                                 <div class="layui-input-block">
-                                    <textarea placeholder="请输入内容" name="abstractContent" class="layui-textarea"
+                                    <textarea placeholder="请输入摘要" name="abstractContent" id="abstractContent"
+                                              class="layui-textarea"
                                               style="width: 1100px">
                                     </textarea>
                                 </div>
@@ -112,7 +112,7 @@
                             <div class="layui-form-item layui-form-text">
                                 <label class="layui-form-label required">论文内容：</label>
                                 <div class="layui-input-block">
-                                    <textarea placeholder="请输入内容" name="content" class="layui-textarea"
+                                    <textarea placeholder="请输入论文内容" name="content" id="content" class="layui-textarea"
                                               style="width: 1100px">
                                     </textarea>
                                 </div>
@@ -144,6 +144,33 @@
 <th:block layout:fragment="scripts">
     <script>
         $(function () {
+            // 富文本编辑器:ckeditor
+            // window.CKEDITOR_BASEPATH = '../../static/scripts/common/ckeditor/ckeditor.js';
+            // CKEDITOR.replace('content');
+
+            var editor = CKEDITOR.replace('content1', {height: '500px'}, {
+                toolbar:
+                    [
+                        //加粗     斜体，     下划线      穿过线      下标字        上标字
+                        ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+                        // 数字列表          实体列表            减小缩进    增大缩进
+                        ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'],
+                        //左对 齐             居中对齐          右对齐          两端对齐
+                        ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                        //超链接  取消超链接 锚点
+                        ['Link', 'Unlink', 'Anchor'],
+                        //图片        表格       水平线            表情       特殊字符        分页符
+                        ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                        '/',
+                        // 样式       格式      字体    字体大小
+                        ['Styles', 'Format', 'Font', 'FontSize'],
+                        //文本颜色     背景颜色
+                        ['TextColor', 'BGColor'],
+                        //全屏           显示区块
+                        ['Maximize', 'ShowBlocks', '-']
+                    ]
+            })
+
             layui.use(['form', 'layer', 'table', 'laytpl', 'element', 'formSelects', 'upload'], function () {
                 var form = layui.form;
                 var laytpl = layui.laytpl;
@@ -226,6 +253,11 @@
                     })
                 }
 
+                // 清除textarea内容
+                $("#abstractContent").val("");
+                $("#content").val("");
+
+                // 文件上传
                 upload.render({
                     type: 'post',
                     elem: '#upload'
@@ -252,8 +284,8 @@
                     console.log(data);
                     sendAjax(layer, null, table, 'thesisManage/ajax/addThesis', 'POST', null, data, function (res) {
                         if (res.code == 0) {
-                            layer.msg('添加论文成功！');
                             location.href = TDFPath + "thesisManage/index";
+                            layer.msg('添加论文成功！');
                         } else {
                             layer.msg(res.msg);
                         }

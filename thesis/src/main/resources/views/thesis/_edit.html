@@ -44,7 +44,7 @@
                                         <div class="layui-select-title">
                                             <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                             <input type="hidden" id="authorhidden">
-                                            <input type="text" id="author">
+                                            <input type="text" id="author" name="author">
                                         </div>
                                         <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
 
@@ -60,7 +60,7 @@
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                                 <input type="hidden" id="typehidden">
-                                                <input type="text" id="type">
+                                                <input type="text" id="type" name="type">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_type">
 
@@ -77,7 +77,7 @@
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                                 <input type="hidden" id="keywordhidden">
-                                                <input type="text" id="keyword">
+                                                <input type="text" id="keyword" name="keyword">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_keyword">
 
@@ -94,7 +94,7 @@
                                             <div class="layui-select-title">
                                                 <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                                 <input type="hidden" id="literaturehidden">
-                                                <input type="text" id="literature">
+                                                <input type="text" id="literature" name="literature">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_literature">
 
@@ -257,8 +257,8 @@
                     console.log(data);
                     sendAjax(layer, null, table, 'thesisManage/ajax/editThesis', 'POST', null, data, function (res) {
                         if (res.code == 0) {
-                            layer.msg('添加论文成功！');
                             location.href = TDFPath + "thesisManage/index";
+                            layer.msg('编辑论文成功！');
                         } else {
                             layer.msg(res.msg);
                         }
