@@ -5,6 +5,7 @@ import com.tdf.controller.base.BaseController;
 import com.tdf.entity.ThesisInfo;
 import com.tdf.entity.criteria.ThesisInfoCriteria;
 import com.tdf.entity.model.FileModel;
+import com.tdf.entity.model.FileUploadVo;
 import com.tdf.entity.model.SimpleModel;
 import com.tdf.entity.sys.SysDict;
 import com.tdf.models.LayuiDataTableModel;
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,6 +115,18 @@ public class ThesisManageController extends BaseController {
     }
 
     /**
+     * 跳转到详情页面
+     */
+    @RequestMapping("/ajax/toDetailPage")
+    public ModelAndView toDetailPage(String id) {
+        ModelAndView mv = new ModelAndView();
+        ThesisInfo thesis = thesisManageService.getThesisInfoById(id);
+        mv.addObject("thesis", thesis);
+        mv.setViewName("thesis/_detail");
+        return mv;
+    }
+
+    /**
      * 根据父级key查询子级列表
      *
      * @return
@@ -152,12 +167,48 @@ public class ThesisManageController extends BaseController {
     @ResponseBody
     public ActionResult uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            String fileName = fileUploadService.fileUpload(file, null);
-            return success(fileName);
+            FileUploadVo vo = fileUploadService.fileUpload(file, null);
+            return success(vo);
         } catch (Exception e) {
             e.printStackTrace();
             return fail("上传失败");
         }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/ajax/download", method = RequestMethod.GET)
+    public String download(HttpServletRequest request, HttpSession session, HttpServletResponse response,
+                           String filePath) {
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+        try {
+            fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");
+        } catch (UnsupportedEncodingException e1) {
+        }
+        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        try {
+            InputStream inputStream = new FileInputStream(filePath);
+            OutputStream os = response.getOutputStream();
+            byte[] b = new byte[2048];
+            int length;
+            while ((length = inputStream.read(b)) > 0) {
+                os.write(b, 0, length);
+            }
+            // 这里主要关闭。
+            os.close();
+            inputStream.close();
+        } catch (FileNotFoundException e) {
+
+        } catch (IOException e) {
+        }
+        return null;
     }
 
 }

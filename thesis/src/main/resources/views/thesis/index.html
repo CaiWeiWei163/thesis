@@ -62,12 +62,10 @@
 
     <script type="text/html" id="barDemo">
         <a class="layui-btn" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger" lay-event="download">下载</a>
-    </script>
-    <script type="text/html" id="switchTpl">
-        <input type="checkbox" name="id" value="{{d.id}}" lay-skin="switch" lay-text="Valid|Invalid"
-               lay-filter="sexDemo" {{
-               d.state== 1 ? 'checked' : '' }}>
+        {{#if (d.fileinfoId == null) { }}
+                {{# }else{ }}
+               <a class="layui-btn layui-btn-danger" lay-event="download">下载</a>
+                {{# } }}
     </script>
 </div>
 
@@ -131,7 +129,15 @@
                 , page: true //开启分页
                 , cols: [
                     [
-                        {field: 'title', title: '标题', minWidth: "150"},
+                        {
+                            field: 'title',
+                            title: '标题',
+                            minWidth: "150",
+                            event: "detail",
+                            templet: function (d) {
+                                return '<span href="#" class="detail" data-id="data-id" style="color: #009688;cursor: pointer;">' + '<strong>' + d.title + '</strong>' + '</span>'
+                            }
+                        },
                         {field: 'author', title: '作者', minWidth: "150"},
                         {field: 'type', title: '分类', minWidth: "150"},
                         {field: 'keyword', title: '关键字', minWidth: "150"},
@@ -153,8 +159,10 @@
                     , layEvent = obj.event; //获得 lay-event 对应的值
                 if (layEvent === "edit") {
                     editThesis(layer, form, data);
+                } else if (layEvent === "detail") {
+                    detailThesis(layer, form, data);
                 } else if (layEvent === "download") {
-                    download(layer, form, data);
+                    download(data);
                 }
             });
 
@@ -203,9 +211,14 @@
                 location.href = TDFPath + "thesisManage/ajax/toEditPage?id=" + data.id;
             }
 
+            // 论文详情
+            function detailThesis(layer, form, data) {
+                location.href = TDFPath + "thesisManage/ajax/toDetailPage?id=" + data.id;
+            }
+
             // 下载论文原文件
-            function download() {
-                // location.href = TDFPath + "thesisManage/ajax/toEditPage?id=" + data.id;
+            function download(data) {
+                window.location.href = TDFPath + "thesisManage/ajax/download?filePath=" + data.fileinfoId;
             }
         });
     </script>

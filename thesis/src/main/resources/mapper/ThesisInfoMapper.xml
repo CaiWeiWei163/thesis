@@ -20,7 +20,7 @@
         <result column="content" property="content" jdbcType="LONGVARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, title, author, type, keyword, literature, abstract_content, fileinfo_id, state, 
+    id, title, author, type, keyword, literature, abstract_content, fileinfo_id, state,
     create_user, create_time, update_user, update_time
   </sql>
     <sql id="Blob_Column_List">
@@ -64,7 +64,7 @@
     </select>
 
     <!--论文列表-->
-    <select id="listThesis" resultType="com.tdf.entity.ThesisInfo">
+    <select id="listThesis" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         ,

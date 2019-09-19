@@ -4,6 +4,7 @@
 
 package com.tdf.service.fileUploadService;
 
+import com.tdf.entity.model.FileUploadVo;
 import com.tdf.util.StringUuid;
 import com.tdf.util.exceptions.KnowException;
 import org.apache.commons.io.FileUtils;
@@ -35,7 +36,7 @@ public class FileUploadService {
      * @param folderName 文件夹名称
      * @return
      */
-    public String fileUpload(MultipartFile file, String folderName) {
+    public FileUploadVo fileUpload(MultipartFile file, String folderName) {
         String relativePath = getRelativePath(folderName);
 
         String fileName = file.getOriginalFilename();
@@ -57,7 +58,8 @@ public class FileUploadService {
         try {
             //保存文件到本地
             FileUtils.writeByteArrayToFile(new File(completeFilePath), file.getBytes());
-            return fileName;
+            FileUploadVo fileUploadVo = new FileUploadVo(fileName, relativeFilePath, fileSize);
+            return fileUploadVo;
         } catch (Exception e) {
             throw new KnowException(e.getMessage(), -1);
         }

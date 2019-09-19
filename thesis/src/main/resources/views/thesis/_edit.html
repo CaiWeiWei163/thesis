@@ -6,20 +6,17 @@
 <th:block layout:fragment="styles">
     <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
-    <!--<link type="text/css" rel="stylesheet" th:href="@{/scripts/common/inputTags.css}"/>-->
     <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/tag.css}"/>
-    <!--<link type="text/css" rel="stylesheet" th:href="@{/wangeditor/css/wangEditor.css}"/>-->
     <!--多选下拉框CSS-->
     <link type="text/css" rel="stylesheet"
           th:href="@{/scripts/common/layui/layui_ext/formSelects/formSelects-v4.css}"/>
-    <!--<script type="text/javascript" th:src="@{/wangeditor/script/wangEditor.js}"></script>-->
-    <!--<script type="text/javascript" th:src="@{/scripts/common/layui/layui_ext/inputTags/inputTags.js}"></script>-->
     <script type="text/javascript" th:src="@{/scripts/common/tag.js}"></script>
+    <script src="../../scripts/common/ckeditor/ckeditor.js"></script>
 </th:block>
 <div layout:fragment="mainContent">
     <div class="layui-breadcrumb-box">
         <span class="layui-breadcrumb">
-        <a><cite>论文管理/论文添加</cite></a>
+        <a><cite>论文管理/论文编辑</cite></a>
         </span>
     </div>
     <div>
@@ -32,7 +29,8 @@
                                 <label class="layui-form-label required">论文标题：</label>
                                 <div class="layui-input-block">
                                     <input type="hidden" name="id" th:value="${thesis.id}">
-                                    <input type="text" name="title" th:value="${thesis.title}" lay-verify="required"
+                                    <input type="text" name="title" th:value="${thesis.title}"
+                                           lay-verify="required"
                                            autocomplete="off"
                                            style="width: 1100px" placeholder="请输入论文标题" class="layui-input">
                                 </div>
@@ -42,9 +40,9 @@
                                 <div class="layui-input-block">
                                     <div class="lay-ZD-search layui-form-select">
                                         <div class="layui-select-title">
-                                            <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                             <input type="hidden" id="authorhidden">
-                                            <input type="text" id="author" name="author">
+                                            <input type="text" id="author" name="author" th:value="${thesis.author}"
+                                                   lay-verify="required">
                                         </div>
                                         <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
 
@@ -58,9 +56,9 @@
                                     <div class="layui-select-title">
                                         <div class="lay-ZD-search layui-form-select">
                                             <div class="layui-select-title">
-                                                <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                                 <input type="hidden" id="typehidden">
-                                                <input type="text" id="type" name="type">
+                                                <input type="text" id="type" name="type" th:value="${thesis.type}"
+                                                       lay-verify="required">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_type">
 
@@ -75,9 +73,9 @@
                                     <div class="layui-select-title">
                                         <div class="lay-ZD-search layui-form-select">
                                             <div class="layui-select-title">
-                                                <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                                 <input type="hidden" id="keywordhidden">
-                                                <input type="text" id="keyword" name="keyword">
+                                                <input type="text" id="keyword" name="keyword"
+                                                       th:value="${thesis.keyword}" lay-verify="required">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_keyword">
 
@@ -92,9 +90,9 @@
                                     <div class="layui-select-title">
                                         <div class="lay-ZD-search layui-form-select">
                                             <div class="layui-select-title">
-                                                <!--<input type="text" name="id" class="layui-input" style="display:none">-->
                                                 <input type="hidden" id="literaturehidden">
-                                                <input type="text" id="literature" name="literature">
+                                                <input type="text" id="literature" name="literature"
+                                                       th:value="${thesis.literature}" lay-verify="required">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_literature">
 
@@ -108,6 +106,7 @@
                                 <div class="layui-input-block">
                                     <textarea placeholder="请输入内容" name="abstractContent"
                                               th:text="${thesis.abstractContent}" class="layui-textarea"
+                                              lay-verify="required"
                                               style="width: 1100px">
                                     </textarea>
                                 </div>
@@ -133,7 +132,8 @@
                             </div>
                             <div class="layui-form-item">
                                 <div class="layui-input-block">
-                                    <button type="button" class="layui-btn" lay-filter="save" id="save">保 存
+                                    <button type="button" class="layui-btn" lay-filter="save" id="save" lay-submit="">
+                                        保 存
                                     </button>
                                     <button type="reset" class="layui-btn layui-btn-primary">重 置</button>
                                 </div>
@@ -149,6 +149,30 @@
 <th:block layout:fragment="scripts">
     <script>
         $(function () {
+            // 富文本编辑器:ckeditor
+            var editor = CKEDITOR.replace('content', {width: '1100px', height: '300px'}, {
+                toolbar:
+                    [
+                        //加粗     斜体，     下划线      穿过线      下标字        上标字
+                        ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+                        // 数字列表          实体列表            减小缩进    增大缩进
+                        ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'],
+                        //左对 齐             居中对齐          右对齐          两端对齐
+                        ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                        //超链接  取消超链接 锚点
+                        ['Link', 'Unlink', 'Anchor'],
+                        //图片        表格       水平线            表情       特殊字符        分页符
+                        ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+                        '/',
+                        // 样式       格式      字体    字体大小
+                        ['Styles', 'Format', 'Font', 'FontSize'],
+                        //文本颜色     背景颜色
+                        ['TextColor', 'BGColor'],
+                        //全屏           显示区块
+                        ['Maximize', 'ShowBlocks', '-']
+                    ]
+            })
+
             layui.use(['form', 'layer', 'table', 'laytpl', 'element', 'formSelects', 'upload'], function () {
                 var form = layui.form;
                 var laytpl = layui.laytpl;
@@ -158,19 +182,24 @@
 
                 //添加标签-作者
                 var tagAuthor = new Tag("author");
+                tagAuthor.tagValue = $("#author").val();
                 tagAuthor.initView();
 
                 //添加标签-分类
                 var tagType = new Tag("type");
+                tagType.tagValue = $("#type").val();
                 tagType.initView();
 
                 //添加标签-关键字
                 var tagKeyword = new Tag("keyword");
+                tagKeyword.tagValue = $("#keyword").val();
                 tagKeyword.initView();
 
                 //添加标签-引证文献
                 var tagLiterature = new Tag("literature");
+                tagLiterature.tagValue = $("#literature").val();
                 tagLiterature.initView();
+
 
                 // 模糊查询
                 $("input").on("click", function () {
@@ -251,7 +280,7 @@
                 });
 
                 // 保存
-                $("#save").on("click", function () {
+                form.on('submit(save)', function (data) {
                     var data = $("#addThesisForm").SerializeJson();
                     console.log("data:");
                     console.log(data);
@@ -263,6 +292,7 @@
                             layer.msg(res.msg);
                         }
                     });
+                    return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
             });
         });

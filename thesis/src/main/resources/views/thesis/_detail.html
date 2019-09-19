@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="~{_viewStart}">
+<meta charset="utf-8">
+<th:block layout:fragment="styles">
+    <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/layui/layui_ext/dtree/dtree.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/scripts/common/tag.css}"/>
+    <!--多选下拉框CSS-->
+    <link type="text/css" rel="stylesheet"
+          th:href="@{/scripts/common/layui/layui_ext/formSelects/formSelects-v4.css}"/>
+    <script type="text/javascript" th:src="@{/scripts/common/tag.js}"></script>
+    <script src="../../scripts/common/ckeditor/ckeditor.js"></script>
+</th:block>
+<style>
+
+</style>
+<div layout:fragment="mainContent">
+    <div class="layui-breadcrumb-box">
+        <span class="layui-breadcrumb">
+        <a><cite>论文管理/论文详情</cite></a>
+        </span>
+    </div>
+    <div>
+        <div class="layui-card" style="height: 750px">
+            <div class="layui-card-body">
+                <div class="layui-tab layui-tab-brief">
+                    <div class="layui-tab-content">
+                        <div align="center">
+                            <input type="hidden" th:value="${thesis.id}" id="id">
+                            <input type="hidden" th:value="${thesis.fileinfoId}" id="fileinfoId">
+                            <span type="text" th:text="${thesis.title}" style="font-size: 42px"></span>
+                        </div>
+                        <br>
+                        <div align="center">
+                            <span style="font-size: 20px">作者：</span>
+                            <span type="text" th:text="${thesis.author}" style="font-size: 20px"></span>
+                        </div>
+                        <br>
+                        <!--分割线-->
+                        <hr class="layui-bg-blue">
+                        <div style="width: 1400px;height: 320px;margin-left: 140px;">
+                            <div align="left" style="height: 150px">
+                                <span style="font-size: 15px"><strong>摘要：</strong></span>
+                                <span type="text" th:text="${thesis.abstractContent}" style="font-size: 15px"></span>
+                            </div>
+                            <br>
+                            <div align="left">
+                                <span style="font-size: 15px"><strong>分类：</strong></span>
+                                <span type="text" th:text="${thesis.type}" style="font-size: 15px"></span>
+                            </div>
+                            <br>
+                            <div align="left">
+                                <span style="font-size: 15px"><strong>关键字：</strong></span>
+                                <span type="text" th:text="${thesis.keyword}" style="font-size: 15px"></span>
+                            </div>
+                            <br>
+                            <div align="left">
+                                <span style="font-size: 15px"><strong>引证文献：</strong></span>
+                                <span type="text" th:text="${thesis.literature}" style="font-size: 15px"></span>
+                            </div>
+                        </div>
+                        <br>
+                        <div align="center">
+                            <button type="button" class="layui-btn" id="edit">
+                                编 辑
+                            </button>
+                            <button type="button" class="layui-btn" id="download">
+                                下 载
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        $(function () {
+            $("#edit").on("click", function () {
+                location.href = TDFPath + "thesisManage/ajax/toEditPage?id=" + $("#id").val();
+            });
+            $("#download").on("click", function () {
+                window.location.href = TDFPath + "thesisManage/ajax/download?filePath=" + $("#fileinfoId").val();
+            });
+        });
+    </script>
+</th:block>
+</html>
