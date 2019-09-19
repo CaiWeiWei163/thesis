@@ -2,11 +2,14 @@ package com.tdf.service.thesis;
 
 import com.tdf.common.ContextHolder;
 import com.tdf.dao.ThesisInfoMapper;
+import com.tdf.entity.ThesisBackups;
 import com.tdf.entity.ThesisInfo;
 import com.tdf.entity.criteria.ThesisInfoCriteria;
 import com.tdf.entity.sys.SysDict;
 import com.tdf.util.StringUuid;
 import com.tdf.util.page.PagedList;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +52,15 @@ public class ThesisManageService {
         }
         List<ThesisInfo> list = thesisInfoMapper.listThesis(criteria.getTopIndex(),
                 criteria.getPageSize(), map);
+        // 优化列表显示
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (ThesisInfo thesisInfo : list) {
+                replaceView(thesisInfo, "author");
+                replaceView(thesisInfo, "type");
+                replaceView(thesisInfo, "keyword");
+                replaceView(thesisInfo, "literature");
+            }
+        }
         return new PagedList<>(list, criteria.getPageNo(), total);
     }
 
@@ -97,6 +109,50 @@ public class ThesisManageService {
      * @param id
      */
     public ThesisInfo getThesisInfoById(String id) {
-        return thesisInfoMapper.selectByPrimaryKey(id);
+        // 详情页面显示优化
+        ThesisInfo thesisInfo = thesisInfoMapper.selectByPrimaryKey(id);
+        replaceView(thesisInfo, "author");
+        replaceView(thesisInfo, "type");
+        replaceView(thesisInfo, "keyword");
+        replaceView(thesisInfo, "literature");
+        return thesisInfo;
+    }
+
+    /**
+     * 优化页面显示
+     *
+     * @param thesisInfo
+     * @param str
+     */
+    public void replaceView(ThesisInfo thesisInfo, String str) {
+        if ("author".equals(str)) {
+            // 作者
+            String author = thesisInfo.getAuthor();
+            if (StringUtils.isNotEmpty(author)) {
+                String replace = author.replace(",", "、 ");
+                thesisInfo.setAuthorStr(replace);
+            }
+        } else if ("type".equals(str)) {
+            // 分类
+            String type = thesisInfo.getType();
+            if (StringUtils.isNotEmpty(type)) {
+                String replace = type.replace(",", "、 ");
+                thesisInfo.setTypeStr(replace);
+            }
+        } else if ("keyword".equals(str)) {
+            // 关键字
+            String keyword = thesisInfo.getKeyword();
+            if (StringUtils.isNotEmpty(keyword)) {
+                String replace = keyword.replace(",", "、 ");
+                thesisInfo.setKeywordStr(replace);
+            }
+        } else if ("literature".equals(str)) {
+            // 引证文献
+            String literature = thesisInfo.getLiterature();
+            if (StringUtils.isNotEmpty(literature)) {
+                String replace = literature.replace(",", "、 ");
+                thesisInfo.setLiteratureStr(replace);
+            }
+        }
     }
 }

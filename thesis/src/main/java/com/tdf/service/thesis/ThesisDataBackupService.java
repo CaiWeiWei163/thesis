@@ -2,29 +2,28 @@ package com.tdf.service.thesis;
 
 import com.tdf.common.ContextHolder;
 import com.tdf.dao.ThesisBackupsMapper;
-import com.tdf.dao.ThesisInfoMapper;
 import com.tdf.entity.ThesisBackups;
-import com.tdf.entity.ThesisInfo;
-import com.tdf.entity.criteria.ThesisInfoCriteria;
-import com.tdf.entity.sys.SysDict;
 import com.tdf.util.StringUuid;
 import com.tdf.util.page.PagedCriteria;
 import com.tdf.util.page.PagedList;
 import com.tdf.utils.ExportSQLFile;
 import com.tdf.utils.FileToZip;
 import com.tdf.utils.GetFileNameUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipOutputStream;
 
 /**
  * @author cww
@@ -49,6 +48,18 @@ public class ThesisDataBackupService {
         }
         List<ThesisBackups> list = thesisBackupsMapper.listBackups(criteria.getTopIndex(),
                 criteria.getPageSize(), map);
+        // 替换文件列表显示
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (ThesisBackups thesisBackups : list) {
+                String fileList = thesisBackups.getBackupsList();
+                if (StringUtils.isNotEmpty(fileList)) {
+                    // 去掉[]
+                    String strip = StringUtils.strip(fileList, "[]");
+                    String replace = strip.replace(",", "、 ");
+                    thesisBackups.setBackupsListStr(replace);
+                }
+            }
+        }
         return new PagedList<>(list, criteria.getPageNo(), total);
     }
 
@@ -71,17 +82,17 @@ public class ThesisDataBackupService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hhmmss");
         String format = dateTimeFormatter.format(LocalDateTime.now());
         String basePath = "D:\\databackup\\";
-//        String filePath = basePath + format;// 文件夹路径
-//        File file = new File(filePath);
-//        if (!file.exists()) {//若此目录不存在，则创建之
-//            file.mkdir();
-//        }
+        String filePath = basePath + format;// 文件夹路径
+        File file = new File(filePath);
+        if (!file.exists()) {//若此目录不存在，则创建之
+            file.mkdir();
+        }
         // 2.导出MySql的sql文件
         ExportSQLFile.exportSql();
         // 3.将文件复制到刚创建的文件夹下
-        // copyDir(basePath + "filelist", filePath);
+        copyDir(basePath + "filelist", filePath);
         // 4.打成zip包
-        FileToZip.fileToZip(basePath + "filelist", basePath, format);
+        FileToZip.fileToZip(filePath, basePath, format);
         // 5.表增加一条记录
         ThesisBackups tb = new ThesisBackups();
         tb.setId(StringUuid.getUuid());

@@ -61,10 +61,10 @@
     </div>
 
     <script type="text/html" id="barDemo">
-        <a class="layui-btn" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         {{#if (d.fileinfoId == null) { }}
                 {{# }else{ }}
-               <a class="layui-btn layui-btn-danger" lay-event="download">下载</a>
+               <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="download">下载</a>
                 {{# } }}
     </script>
 </div>
@@ -138,13 +138,13 @@
                                 return '<span href="#" class="detail" data-id="data-id" style="color: #009688;cursor: pointer;">' + '<strong>' + d.title + '</strong>' + '</span>'
                             }
                         },
-                        {field: 'author', title: '作者', minWidth: "150"},
-                        {field: 'type', title: '分类', minWidth: "150"},
-                        {field: 'keyword', title: '关键字', minWidth: "150"},
+                        {field: 'authorStr', title: '作者', minWidth: "150"},
+                        {field: 'typeStr', title: '分类', minWidth: "150"},
+                        {field: 'keywordStr', title: '关键字', minWidth: "150"},
                         {field: 'createTime', title: '上传时间', minWidth: "150"},
                         {
                             fixed: 'id',
-                            title: 'OP',
+                            title: '操作',
                             width: "180",
                             align: 'center',
                             toolbar: '#barDemo',

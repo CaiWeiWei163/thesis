@@ -76,7 +76,7 @@ public class ThesisDataBackupController extends BaseController {
     }
 
     /**
-     * 文件下载
+     * 数据备份(打包并下载，根据id下载文件)
      *
      * @param request
      * @param response

@@ -35,7 +35,7 @@
                         <br>
                         <div align="center">
                             <span style="font-size: 20px">作者：</span>
-                            <span type="text" th:text="${thesis.author}" style="font-size: 20px"></span>
+                            <span type="text" th:text="${thesis.authorStr}" style="font-size: 20px"></span>
                         </div>
                         <br>
                         <!--分割线-->
@@ -48,17 +48,17 @@
                             <br>
                             <div align="left">
                                 <span style="font-size: 15px"><strong>分类：</strong></span>
-                                <span type="text" th:text="${thesis.type}" style="font-size: 15px"></span>
+                                <span type="text" th:text="${thesis.typeStr}" style="font-size: 15px"></span>
                             </div>
                             <br>
                             <div align="left">
                                 <span style="font-size: 15px"><strong>关键字：</strong></span>
-                                <span type="text" th:text="${thesis.keyword}" style="font-size: 15px"></span>
+                                <span type="text" th:text="${thesis.keywordStr}" style="font-size: 15px"></span>
                             </div>
                             <br>
                             <div align="left">
                                 <span style="font-size: 15px"><strong>引证文献：</strong></span>
-                                <span type="text" th:text="${thesis.literature}" style="font-size: 15px"></span>
+                                <span type="text" th:text="${thesis.literatureStr}" style="font-size: 15px"></span>
                             </div>
                         </div>
                         <br>

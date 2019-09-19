@@ -7,6 +7,8 @@ public class ThesisBackups {
 
     private String backupsList;
 
+    private String backupsListStr;
+
     private String fileinfoId;
 
     private Integer state;
@@ -81,5 +83,13 @@ public class ThesisBackups {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getBackupsListStr() {
+        return backupsListStr;
+    }
+
+    public void setBackupsListStr(String backupsListStr) {
+        this.backupsListStr = backupsListStr;
     }
 }

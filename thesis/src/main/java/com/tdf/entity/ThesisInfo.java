@@ -8,12 +8,16 @@ public class ThesisInfo {
     private String title;
 
     private String author;
+    private String authorStr;
 
     private String type;
+    private String typeStr;
 
     private String keyword;
+    private String keywordStr;
 
     private String literature;
+    private String literatureStr;
 
     private String abstractContent;
 
@@ -141,5 +145,37 @@ public class ThesisInfo {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    public String getAuthorStr() {
+        return authorStr;
+    }
+
+    public void setAuthorStr(String authorStr) {
+        this.authorStr = authorStr;
+    }
+
+    public String getTypeStr() {
+        return typeStr;
+    }
+
+    public void setTypeStr(String typeStr) {
+        this.typeStr = typeStr;
+    }
+
+    public String getKeywordStr() {
+        return keywordStr;
+    }
+
+    public void setKeywordStr(String keywordStr) {
+        this.keywordStr = keywordStr;
+    }
+
+    public String getLiteratureStr() {
+        return literatureStr;
+    }
+
+    public void setLiteratureStr(String literatureStr) {
+        this.literatureStr = literatureStr;
     }
 }
