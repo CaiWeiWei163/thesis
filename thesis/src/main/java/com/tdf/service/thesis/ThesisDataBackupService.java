@@ -10,6 +10,7 @@ import com.tdf.entity.sys.SysDict;
 import com.tdf.util.StringUuid;
 import com.tdf.util.page.PagedCriteria;
 import com.tdf.util.page.PagedList;
+import com.tdf.utils.ExportSQLFile;
 import com.tdf.utils.FileToZip;
 import com.tdf.utils.GetFileNameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,19 +71,21 @@ public class ThesisDataBackupService {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hhmmss");
         String format = dateTimeFormatter.format(LocalDateTime.now());
         String basePath = "D:\\databackup\\";
-        String filePath = basePath + format;// 文件夹路径
-        File file = new File(filePath);
-        if (!file.exists()) {//若此目录不存在，则创建之
-            file.mkdir();
-        }
-        // 2.将文件复制到刚创建的文件夹下
-        copyDir(basePath + "filelist", filePath);
-        // 3.打成zip包
-        FileToZip.fileToZip(filePath, basePath, format);
-        // 4.表增加一条记录
+//        String filePath = basePath + format;// 文件夹路径
+//        File file = new File(filePath);
+//        if (!file.exists()) {//若此目录不存在，则创建之
+//            file.mkdir();
+//        }
+        // 2.导出MySql的sql文件
+        ExportSQLFile.exportSql();
+        // 3.将文件复制到刚创建的文件夹下
+        // copyDir(basePath + "filelist", filePath);
+        // 4.打成zip包
+        FileToZip.fileToZip(basePath + "filelist", basePath, format);
+        // 5.表增加一条记录
         ThesisBackups tb = new ThesisBackups();
         tb.setId(StringUuid.getUuid());
-        tb.setFileinfoId(filePath + ".zip");
+        tb.setFileinfoId(basePath + format + ".zip");
         String fileNames = GetFileNameUtils.getFileNames(basePath + "filelist");
         tb.setBackupsList(fileNames);
         tb.setCreateTime(new Date());
