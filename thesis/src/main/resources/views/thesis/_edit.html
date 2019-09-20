@@ -78,7 +78,7 @@
                                           </span>
                                         <div class="layui-input-inline">
                                             <input type="text" id="author" name="author" th:value="${thesis.author}"
-                                                   lay-verify="required" class="layui-input" autocomplete="off"
+                                                   class="layui-input" autocomplete="off"
                                                    placeholder="模糊搜索下拉框">
                                         </div>
                                         <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
@@ -96,7 +96,7 @@
                                           </span>
                                             <div class="layui-input-inline">
                                                 <input type="text" id="type" name="type" th:value="${thesis.type}"
-                                                       lay-verify="required" class="layui-input" autocomplete="off"
+                                                       class="layui-input" autocomplete="off"
                                                        placeholder="模糊搜索下拉框">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_type">
@@ -115,7 +115,7 @@
                                           </span>
                                             <div class="layui-input-inline">
                                                 <input type="text" id="keyword" name="keyword"
-                                                       th:value="${thesis.keyword}" lay-verify="required"
+                                                       th:value="${thesis.keyword}"
                                                        class="layui-input" autocomplete="off" placeholder="模糊搜索下拉框">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_keyword">
@@ -134,7 +134,7 @@
                                           </span>
                                             <div class="layui-input-inline">
                                                 <input type="text" id="literature" name="literature"
-                                                       th:value="${thesis.literature}" lay-verify="required"
+                                                       th:value="${thesis.literature}"
                                                        class="layui-input" autocomplete="off" placeholder="模糊搜索下拉框">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_literature">
@@ -167,7 +167,8 @@
                                     <button type="button" class="layui-btn" id="upload">
                                         <i class="layui-icon">&#xe67c;</i>选择文件
                                     </button>&nbsp;&nbsp;
-                                    <input type="hidden" name="fileinfoId" th:value="${thesis.fileinfoId}">
+                                    <input type="hidden" name="fileinfoId" id="fileinfoId"
+                                           th:value="${thesis.fileinfoId}">
                                     <strong><span id="filename" style="color: #009688;"></span></strong>
                                 </div>
                             </div>
@@ -297,17 +298,20 @@
                                         + "<i class='layui-icon layui-icon-close'></i>"
                                         + "</span>&nbsp;&nbsp;"
                                     );
-
                                 });
                             },
                             error: function (error) {
                                 layer.alert("获取数据失败")
                             }
                         });
-                    }).on("click", function () {
-                        $(this).trigger("keyup");
                     })
                 }
+
+                // 鼠标失去焦点事件
+                $(document).on("focus", " input", function () {
+                    $(".layui-anim-upbit").hide();
+                    $(this).parents(".lay-ZD-search").find(".layui-anim-upbit").show();
+                })
 
                 // 删除标签
                 $(document).on("click", ".layui-icon-close", function () {
@@ -322,6 +326,7 @@
                     $("dl").hide();
                 })
 
+                // 文件上传
                 upload.render({
                     type: 'post',
                     elem: '#upload'
@@ -331,7 +336,8 @@
                         //请求正常回调
                         if (res.code == 0) {
                             console.log(res);
-                            $("#filename").html(res.msg);
+                            $("#filename").html(res.data.fileName);
+                            $("#fileinfoId").val(res.data.filePath);
                             layer.msg("上传成功！");
                         }
                     }

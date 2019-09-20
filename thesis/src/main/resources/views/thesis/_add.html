@@ -163,8 +163,8 @@
                                     <button type="button" class="layui-btn" id="upload">
                                         <i class="layui-icon">&#xe67c;</i>选择文件
                                     </button>&nbsp;&nbsp;
-                                    <strong><span id="filename" style="color: #009688;"></span></strong>
                                     <input type="hidden" name="fileinfoId" id="fileinfoId">
+                                    <strong><span id="filename" style="color: #009688;"></span></strong>
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -221,6 +221,8 @@
                 $(document).on("click", "input", function () {
                     var id = $(this).attr("id");
                     console.log(id);
+                    console.log(id);
+                    console.log(id);
                     if (id == "author") {
                         setTimeout(function () {
                             getFuzzySearch(form, "author", "pull_down_author");
@@ -250,7 +252,7 @@
                 function getFuzzySearch(form, id, pulldown) {
                     console.log("pulldown:");
                     console.log(pulldown);
-                    $(".lay-ZD-search input").off().on("keyup", function () {
+                    $("#" + id).off().on("keyup input", function () {
                         // 清空下拉框列表
                         $("#" + pulldown).empty();
                         var str = "";
@@ -283,10 +285,19 @@
                                 layer.alert("获取数据失败")
                             }
                         });
-                    }).on("click", function () {
-                        $(this).trigger("keyup");
                     })
                 }
+
+                // 鼠标失去焦点事件
+                $(document).on("focus", " input", function () {
+                    $(".layui-anim-upbit").hide();
+                    $(this).parents(".lay-ZD-search").find(".layui-anim-upbit").show();
+                })
+
+                // 删除标签
+                $(document).on("click", ".layui-icon-close", function () {
+                    $(this).parents(".layui-badge").remove();
+                });
 
                 // 点击搜索下拉框列表事件
                 $(document).on("click", ".layui-anim-upbit>dd", function () {
