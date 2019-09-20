@@ -14,6 +14,41 @@
     <script src="../../scripts/common/ckeditor/ckeditor.js"></script>
 </th:block>
 <div layout:fragment="mainContent">
+    <style>
+
+        .layui-form-item .left-badge-bx {
+            padding-top: 6px;
+            display: inline-block;
+            float: left;
+            /*margin-right: 15px;*/
+        }
+
+        .layui-form-item .left-badge-bx .layui-badge {
+            position: relative;
+        }
+
+        .layui-form-item .left-badge-bx .layui-badge:hover .layui-icon-close {
+            display: inline-block;
+        }
+
+        .layui-form-item .left-badge-bx .layui-badge .layui-icon-close {
+            position: absolute;
+            right: -6px;
+            top: -7px;
+            background-color: #fff;
+            color: #000;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            width: 12px;
+            height: 12px;
+            padding: 0;
+            line-height: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
     <div class="layui-breadcrumb-box">
         <span class="layui-breadcrumb">
         <a><cite>论文管理/论文编辑</cite></a>
@@ -24,7 +59,7 @@
             <div class="layui-card-body">
                 <div class="layui-tab layui-tab-brief">
                     <div class="layui-tab-content">
-                        <form class="layui-form" id="addThesisForm">
+                        <form class="layui-form" id="addThesisForm" style="width: 73%;min-width: 1000px;">
                             <div class="layui-form-item">
                                 <label class="layui-form-label required">论文标题：</label>
                                 <div class="layui-input-block">
@@ -32,17 +67,19 @@
                                     <input type="text" name="title" th:value="${thesis.title}"
                                            lay-verify="required"
                                            autocomplete="off"
-                                           style="width: 1100px" placeholder="请输入论文标题" class="layui-input">
+                                           placeholder="请输入论文标题" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label required">作者：</label>
                                 <div class="layui-input-block">
                                     <div class="lay-ZD-search layui-form-select">
-                                        <div class="layui-select-title">
-                                            <input type="hidden" id="authorhidden">
+                                        <span class="left-badge-bx">
+                                          </span>
+                                        <div class="layui-input-inline">
                                             <input type="text" id="author" name="author" th:value="${thesis.author}"
-                                                   lay-verify="required">
+                                                   lay-verify="required" class="layui-input" autocomplete="off"
+                                                   placeholder="模糊搜索下拉框">
                                         </div>
                                         <dl class="layui-anim layui-anim-upbit" id="pull_down_author">
 
@@ -55,10 +92,12 @@
                                 <div class="layui-input-block">
                                     <div class="layui-select-title">
                                         <div class="lay-ZD-search layui-form-select">
-                                            <div class="layui-select-title">
-                                                <input type="hidden" id="typehidden">
+                                            <span class="left-badge-bx">
+                                          </span>
+                                            <div class="layui-input-inline">
                                                 <input type="text" id="type" name="type" th:value="${thesis.type}"
-                                                       lay-verify="required">
+                                                       lay-verify="required" class="layui-input" autocomplete="off"
+                                                       placeholder="模糊搜索下拉框">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_type">
 
@@ -72,10 +111,12 @@
                                 <div class="layui-input-block">
                                     <div class="layui-select-title">
                                         <div class="lay-ZD-search layui-form-select">
-                                            <div class="layui-select-title">
-                                                <input type="hidden" id="keywordhidden">
+                                            <span class="left-badge-bx">
+                                          </span>
+                                            <div class="layui-input-inline">
                                                 <input type="text" id="keyword" name="keyword"
-                                                       th:value="${thesis.keyword}" lay-verify="required">
+                                                       th:value="${thesis.keyword}" lay-verify="required"
+                                                       class="layui-input" autocomplete="off" placeholder="模糊搜索下拉框">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_keyword">
 
@@ -89,10 +130,12 @@
                                 <div class="layui-input-block">
                                     <div class="layui-select-title">
                                         <div class="lay-ZD-search layui-form-select">
-                                            <div class="layui-select-title">
-                                                <input type="hidden" id="literaturehidden">
+                                            <span class="left-badge-bx">
+                                          </span>
+                                            <div class="layui-input-inline">
                                                 <input type="text" id="literature" name="literature"
-                                                       th:value="${thesis.literature}" lay-verify="required">
+                                                       th:value="${thesis.literature}" lay-verify="required"
+                                                       class="layui-input" autocomplete="off" placeholder="模糊搜索下拉框">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_literature">
 
@@ -106,8 +149,7 @@
                                 <div class="layui-input-block">
                                     <textarea placeholder="请输入内容" name="abstractContent"
                                               th:text="${thesis.abstractContent}" class="layui-textarea"
-                                              lay-verify="required"
-                                              style="width: 1100px">
+                                              lay-verify="required">
                                     </textarea>
                                 </div>
                             </div>
@@ -115,18 +157,17 @@
                                 <label class="layui-form-label required">论文内容：</label>
                                 <div class="layui-input-block">
                                     <textarea placeholder="请输入内容" name="content" th:text="${thesis.content}"
-                                              class="layui-textarea"
-                                              style="width: 1100px">
+                                              class="layui-textarea">
                                     </textarea>
                                 </div>
                             </div>
                             <div class="layui-form-item">
-                                <label class="layui-form-label">论文原文件：</label>
+                                <label class="layui-form-label">原文件：</label>
                                 <div class="layui-input-block">
                                     <button type="button" class="layui-btn" id="upload">
                                         <i class="layui-icon">&#xe67c;</i>选择文件
                                     </button>&nbsp;&nbsp;
-                                    <input type="hidden" th:value="${thesis.fileinfoId}">
+                                    <input type="hidden" name="fileinfoId" th:value="${thesis.fileinfoId}">
                                     <strong><span id="filename" style="color: #009688;"></span></strong>
                                 </div>
                             </div>
@@ -180,63 +221,66 @@
                 var layer = layui.layer;
                 var upload = layui.upload;
 
-                //添加标签-作者
-                var tagAuthor = new Tag("author");
-                tagAuthor.tagValue = $("#author").val();
-                tagAuthor.initView();
+                // 回显标签列表
+                var reviewTagList = function (id) {
+                    var arr = $("#" + id).val().split(",");
+                    $.each(arr, function (i, item) {
+                        $(".lay-ZD-search").find("input[name='" + id + "']").parents(".lay-ZD-search").children(".left-badge-bx").append("<span class='layui-badge'>"
+                            + item
+                            + "<i class='layui-icon layui-icon-close'></i>"
+                            + "</span>&nbsp;&nbsp;"
+                        );
+                    })
+                }
+                reviewTagList("author");
+                reviewTagList("type");
+                reviewTagList("keyword");
+                reviewTagList("literature");
 
-                //添加标签-分类
-                var tagType = new Tag("type");
-                tagType.tagValue = $("#type").val();
-                tagType.initView();
-
-                //添加标签-关键字
-                var tagKeyword = new Tag("keyword");
-                tagKeyword.tagValue = $("#keyword").val();
-                tagKeyword.initView();
-
-                //添加标签-引证文献
-                var tagLiterature = new Tag("literature");
-                tagLiterature.tagValue = $("#literature").val();
-                tagLiterature.initView();
-
+                // 清空四个标签输入框数据
+                $("#author").val("");
+                $("#type").val("");
+                $("#keyword").val("");
+                $("#literature").val("");
 
                 // 模糊查询
-                $("input").on("click", function () {
-                    var idhidden = $(this).parent().prev().prev().attr("id");
-                    console.log(idhidden);
-                    if (idhidden == "authorhidden") {
+                $(document).on("click", "input", function () {
+                    var id = $(this).attr("id");
+                    console.log(id);
+                    if (id == "author") {
                         setTimeout(function () {
                             getFuzzySearch(form, "author", "pull_down_author");
                             form.render();
                         }, 200);
                     }
-                    if (idhidden == "typehidden") {
+                    if (id == "type") {
                         setTimeout(function () {
                             getFuzzySearch(form, "type", "pull_down_type");
                             form.render();
                         }, 200);
                     }
-                    if (idhidden == "keywordhidden") {
+                    if (id == "keyword") {
                         setTimeout(function () {
                             getFuzzySearch(form, "keyword", "pull_down_keyword");
                             form.render();
                         }, 200);
                     }
-                    if (idhidden == "literaturehidden") {
+                    if (id == "literature") {
                         setTimeout(function () {
                             getFuzzySearch(form, "literature", "pull_down_literature");
                             form.render();
                         }, 200);
                     }
-                });
+                })
 
                 function getFuzzySearch(form, id, pulldown) {
-                    $(".lay-ZD-search input").on("keyup", function () {
+                    $(".lay-ZD-search input").off().on("keyup", function () {
+                        // 清空下拉框列表
                         $("#" + pulldown).empty();
                         var str = "";
                         $(this).parents(".lay-ZD-search").addClass("layui-form-selected");
                         var search = $(this).val();
+                        $("#" + pulldown).show();
                         $.ajax({
                             url: TDFPath + 'thesisManage/ajax/fuzzySearch',
                             type: 'post',
@@ -247,8 +291,13 @@
                                 })
                                 $("#" + pulldown).append(str);
                                 $("dd").on("click", function () {
-                                    $("input[id='" + id + "']").next().children().val($(this).attr("lay-value"));
-                                    $("#" + pulldown).hide();
+                                    // 生成标签
+                                    $(this).parents(".lay-ZD-search").children(".left-badge-bx").append("<span class='layui-badge'>"
+                                        + $(this).attr("lay-value")
+                                        + "<i class='layui-icon layui-icon-close'></i>"
+                                        + "</span>&nbsp;&nbsp;"
+                                    );
+
                                 });
                             },
                             error: function (error) {
@@ -259,6 +308,19 @@
                         $(this).trigger("keyup");
                     })
                 }
+
+                // 删除标签
+                $(document).on("click", ".layui-icon-close", function () {
+                    $(this).parents(".layui-badge").remove();
+                });
+
+                // 点击搜索下拉框列表事件
+                $(document).on("click", ".layui-anim-upbit>dd", function () {
+                    $(this).siblings().removeClass("layui-this");
+                    $(this).addClass("layui-this");
+                    $(this).parents(".lay-ZD-search").removeClass("layui-form-selected").find("input").val($(this).text());
+                    $("dl").hide();
+                })
 
                 upload.render({
                     type: 'post',
@@ -281,9 +343,15 @@
 
                 // 保存
                 form.on('submit(save)', function (data) {
+                    var author = tagStr("author");
+                    var type = tagStr("type");
+                    var keyword = tagStr("keyword");
+                    var literature = tagStr("literature");
                     var data = $("#addThesisForm").SerializeJson();
-                    console.log("data:");
-                    console.log(data);
+                    data.author = author;
+                    data.type = type;
+                    data.keyword = keyword;
+                    data.literature = literature;
                     sendAjax(layer, null, table, 'thesisManage/ajax/editThesis', 'POST', null, data, function (res) {
                         if (res.code == 0) {
                             location.href = TDFPath + "thesisManage/index";
@@ -294,6 +362,21 @@
                     });
                     return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                 });
+
+                // 组装标签字符串
+                function tagStr(id) {
+                    var str = ""
+                    var newStr = ""
+                    var tagList = $("#" + id).parents(".lay-ZD-search").find(".layui-badge");
+                    if (tagList.length > 0) {
+                        $.each(tagList, function (i, item) {
+                            str = str + $(item).text() + ",";
+                            // 去掉最后一个逗号
+                            newStr = str.substring(0, str.length - 1);
+                        })
+                    }
+                    return newStr;
+                }
             });
         });
     </script>

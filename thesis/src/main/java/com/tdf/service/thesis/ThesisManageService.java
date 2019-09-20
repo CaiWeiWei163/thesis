@@ -82,6 +82,7 @@ public class ThesisManageService {
      * @param thesisInfo
      */
     public void editThesis(ThesisInfo thesisInfo) {
+        // TODO 论文原文件的编辑
         thesisInfo.setUpdateTime(new Date());
         thesisInfo.setUpdateUser(ContextHolder.getLoginSysUserInfo().getRealname());
         thesisInfoMapper.updateByPrimaryKeySelective(thesisInfo);
