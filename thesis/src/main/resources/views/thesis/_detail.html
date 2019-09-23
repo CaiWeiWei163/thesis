@@ -30,6 +30,7 @@
                         <div align="center">
                             <input type="hidden" th:value="${thesis.id}" id="id">
                             <input type="hidden" th:value="${thesis.fileinfoId}" id="fileinfoId">
+                            <input type="hidden" th:value="${thesis.filename}" id="filename">
                             <span type="text" th:text="${thesis.title}" style="font-size: 42px"></span>
                         </div>
                         <br>
@@ -84,7 +85,7 @@
                 location.href = TDFPath + "thesisManage/ajax/toEditPage?id=" + $("#id").val();
             });
             $("#download").on("click", function () {
-                window.location.href = TDFPath + "thesisManage/ajax/download?filePath=" + $("#fileinfoId").val();
+                window.location.href = TDFPath + "thesisManage/download?filePath=" + $("#fileinfoId").val() + "&filename=" + $("#filename").val();
             });
         });
     </script>

@@ -9,6 +9,7 @@
         <result column="keyword" property="keyword" jdbcType="VARCHAR"/>
         <result column="literature" property="literature" jdbcType="VARCHAR"/>
         <result column="abstract_content" property="abstractContent" jdbcType="VARCHAR"/>
+        <result column="filename" property="filename" jdbcType="VARCHAR"/>
         <result column="fileinfo_id" property="fileinfoId" jdbcType="VARCHAR"/>
         <result column="state" property="state" jdbcType="INTEGER"/>
         <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
@@ -20,7 +21,7 @@
         <result column="content" property="content" jdbcType="LONGVARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, title, author, type, keyword, literature, abstract_content, fileinfo_id, state,
+    id, title, author, type, keyword, literature, abstract_content, fileinfo_id, filename, state,
     create_user, create_time, update_user, update_time
   </sql>
     <sql id="Blob_Column_List">
@@ -38,10 +39,10 @@
             <if test="map.author!=null and map.author!=''">
                 and thesis_info.author = #{map.author,jdbcType=VARCHAR}
             </if>
-            <if test="map.guanjianzi!=null and map.keyword!=''">
+            <if test="map.guanjianzi!=null and map.guanjianzi!=''">
                 and thesis_info.keyword = #{map.guanjianzi,jdbcType=VARCHAR}
             </if>
-            <if test="map.keyword!=null and map.keyword!=''">
+            <if test="map.keyword!=null">
                 and (
                 thesis_info.author like
                 concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
@@ -76,10 +77,10 @@
             <if test="map.author!=null and map.author!=''">
                 and thesis_info.author = #{map.author,jdbcType=VARCHAR}
             </if>
-            <if test="map.guanjianzi!=null and map.keyword!=''">
+            <if test="map.guanjianzi!=null and map.guanjianzi!=''">
                 and thesis_info.keyword = #{map.guanjianzi,jdbcType=VARCHAR}
             </if>
-            <if test="map.keyword!=null and map.keyword!=''">
+            <if test="map.keyword!=null">
                 and (
                 thesis_info.author like
                 concat('%',#{map.keyword,jdbcType=VARCHAR},'%')
@@ -189,6 +190,9 @@
             <if test="fileinfoId != null">
                 fileinfo_id,
             </if>
+            <if test="filename != null">
+                filename,
+            </if>
             <if test="state != null">
                 state,
             </if>
@@ -233,6 +237,9 @@
             <if test="fileinfoId != null">
                 #{fileinfoId,jdbcType=VARCHAR},
             </if>
+            <if test="filename != null">
+                #{filename,jdbcType=VARCHAR},
+            </if>
             <if test="state != null">
                 #{state,jdbcType=INTEGER},
             </if>
@@ -276,6 +283,9 @@
             </if>
             <if test="fileinfoId != null">
                 fileinfo_id = #{fileinfoId,jdbcType=VARCHAR},
+            </if>
+            <if test="filename != null">
+                filename = #{filename,jdbcType=VARCHAR},
             </if>
             <if test="state != null">
                 state = #{state,jdbcType=INTEGER},

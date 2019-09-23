@@ -22,6 +22,7 @@ public class ThesisInfo {
     private String abstractContent;
 
     private String fileinfoId;
+    private String filename;
 
     private Integer state;
 
@@ -177,5 +178,13 @@ public class ThesisInfo {
 
     public void setLiteratureStr(String literatureStr) {
         this.literatureStr = literatureStr;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

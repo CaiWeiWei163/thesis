@@ -152,7 +152,7 @@
                             </div>
                             <div class="layui-form-item layui-form-text">
                                 <label class="layui-form-label required">论文内容：</label>
-                                <div class="layui-input-block">
+                                <div class="layui-input-block" id="contentDiv">
                                     <textarea placeholder="请输入论文内容" name="content" id="content" class="layui-textarea">
                                     </textarea>
                                 </div>
@@ -163,8 +163,9 @@
                                     <button type="button" class="layui-btn" id="upload">
                                         <i class="layui-icon">&#xe67c;</i>选择文件
                                     </button>&nbsp;&nbsp;
+                                    <input type="hidden" name="filename" id="filename">
                                     <input type="hidden" name="fileinfoId" id="fileinfoId">
-                                    <strong><span id="filename" style="color: #009688;"></span></strong>
+                                    <strong><span id="filenameSpan" style="color: #009688;"></span></strong>
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -321,8 +322,9 @@
                         //请求正常回调
                         if (res.code == 0) {
                             console.log(res);
-                            $("#filename").html(res.data.fileName);
+                            $("#filename").val(res.data.fileName);
                             $("#fileinfoId").val(res.data.filePath);
+                            $("#filenameSpan").html(res.data.fileName);
                             layer.msg("上传成功！");
                         }
                     }
@@ -343,6 +345,7 @@
                     data.type = type;
                     data.keyword = keyword;
                     data.literature = literature;
+                    data.content = editor.getData();
                     sendAjax(layer, null, table, 'thesisManage/ajax/addThesis', 'POST', null, data, function (res) {
                         if (res.code == 0) {
                             location.href = TDFPath + "thesisManage/index";

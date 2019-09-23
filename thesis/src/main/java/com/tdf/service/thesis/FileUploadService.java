@@ -58,7 +58,7 @@ public class FileUploadService {
         try {
             //保存文件到本地
             FileUtils.writeByteArrayToFile(new File(completeFilePath), file.getBytes());
-            FileUploadVo fileUploadVo = new FileUploadVo(fileName, relativeFilePath, fileSize);
+            FileUploadVo fileUploadVo = new FileUploadVo(fileName, realName, fileSize);
             return fileUploadVo;
         } catch (Exception e) {
             throw new KnowException(e.getMessage(), -1);

@@ -169,7 +169,9 @@
                                     </button>&nbsp;&nbsp;
                                     <input type="hidden" name="fileinfoId" id="fileinfoId"
                                            th:value="${thesis.fileinfoId}">
-                                    <strong><span id="filename" style="color: #009688;"></span></strong>
+                                    <input type="hidden" name="filename" id="filename"
+                                           th:value="${thesis.filename}">
+                                    <strong><span id="filenameSpan" style="color: #009688;"></span></strong>
                                 </div>
                             </div>
                             <div class="layui-form-item">
@@ -237,6 +239,9 @@
                 reviewTagList("type");
                 reviewTagList("keyword");
                 reviewTagList("literature");
+
+                // 回显文件
+                $("#filenameSpan").html($("#filename").val());
 
                 // 清空四个标签输入框数据
                 $("#author").val("");
@@ -336,7 +341,7 @@
                         //请求正常回调
                         if (res.code == 0) {
                             console.log(res);
-                            $("#filename").html(res.data.fileName);
+                            $("#filenameSpan").html(res.data.fileName);
                             $("#fileinfoId").val(res.data.filePath);
                             layer.msg("上传成功！");
                         }

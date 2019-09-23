@@ -17,14 +17,17 @@ import com.tdf.util.web.ActionResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.jni.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +46,9 @@ public class ThesisManageController extends BaseController {
 
     @Autowired
     FileUploadService fileUploadService;
+
+    @Value("${filePath}")
+    String filePathUrl;
 
     // 论文首页
     @RequestMapping({"", "/index"})
@@ -182,20 +188,20 @@ public class ThesisManageController extends BaseController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/ajax/download", method = RequestMethod.GET)
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
     public String download(HttpServletRequest request, HttpSession session, HttpServletResponse response,
-                           String filePath) {
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("multipart/form-data");
+                           String filePath, String filename) throws IOException {
+        response.setCharacterEncoding("UTF-8");
+        OutputStream os = response.getOutputStream();
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
         try {
-            fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");
+            response.setContentType("application/force-download");// 设置强制下载不打开
+            response.addHeader("Content-Disposition", "attachment;fileName=" + java.net.URLEncoder.encode(filename, "UTF-8"));
         } catch (UnsupportedEncodingException e1) {
         }
-        response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+        response.setHeader("Content-Disposition", "attachment;fileName=" + java.net.URLEncoder.encode(filename, "UTF-8"));
         try {
-            InputStream inputStream = new FileInputStream(filePath);
-            OutputStream os = response.getOutputStream();
+            InputStream inputStream = new FileInputStream(filePathUrl + filePath);
             byte[] b = new byte[2048];
             int length;
             while ((length = inputStream.read(b)) > 0) {
@@ -204,11 +210,9 @@ public class ThesisManageController extends BaseController {
             // 这里主要关闭。
             os.close();
             inputStream.close();
-        } catch (FileNotFoundException e) {
-
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
-
 }
