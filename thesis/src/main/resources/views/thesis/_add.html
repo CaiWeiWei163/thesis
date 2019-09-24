@@ -221,9 +221,6 @@
                 // 模糊查询
                 $(document).on("click", "input", function () {
                     var id = $(this).attr("id");
-                    console.log(id);
-                    console.log(id);
-                    console.log(id);
                     if (id == "author") {
                         setTimeout(function () {
                             getFuzzySearch(form, "author", "pull_down_author");
@@ -259,6 +256,8 @@
                         var str = "";
                         $(this).parents(".lay-ZD-search").addClass("layui-form-selected");
                         var search = $(this).val();
+                        console.log("search:");
+                        console.log(search);
                         $("#" + pulldown).show();
                         $.ajax({
                             url: TDFPath + 'thesisManage/ajax/fuzzySearch',
@@ -269,17 +268,16 @@
                                     str += '<dd lay-value="' + item.dictvalue + '" class="">' + item.dictvalue + '</dd>'
                                 })
                                 $("#" + pulldown).append(str);
-                                $("dd").on("click", function () {
+                                $("dd").off().on("click", function () {
                                     // 生成标签
+                                    console.log("$(this123):");
+                                    console.log($(this));
+                                    console.log("-------------------------------------------------------");
                                     $(this).parents(".lay-ZD-search").children(".left-badge-bx").append("<span class='layui-badge'>"
                                         + $(this).attr("lay-value")
                                         + "<i class='layui-icon layui-icon-close'></i>"
                                         + "</span>&nbsp;&nbsp;"
                                     );
-                                    // 删除标签
-                                    $(document).on("click", ".layui-icon-close", function () {
-                                        $(this).parents(".layui-badge").remove();
-                                    });
                                 });
                             },
                             error: function (error) {
@@ -290,7 +288,7 @@
                 }
 
                 // 鼠标失去焦点事件
-                $(document).on("focus", " input", function () {
+                $(document).on("focus", "input", function () {
                     $(".layui-anim-upbit").hide();
                     $(this).parents(".lay-ZD-search").find(".layui-anim-upbit").show();
                 })
