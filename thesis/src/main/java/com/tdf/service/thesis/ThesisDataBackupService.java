@@ -79,20 +79,28 @@ public class ThesisDataBackupService {
     public void createBackups() throws IOException {
         // https://blog.csdn.net/r1037/article/details/78356698
         // 1.创建文件夹
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hhmmss");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-hh-mm-ss");
         String format = dateTimeFormatter.format(LocalDateTime.now());
         String basePath = "D:\\databackup\\";
         String filePath = basePath + format;// 文件夹路径
-        File file = new File(filePath);
+        File file = new File(basePath);
         if (!file.exists()) {//若此目录不存在，则创建之
             file.mkdir();
+        }
+        File file1 = new File(filePath);
+        if (!file1.exists()) {//若此目录不存在，则创建之
+//            file1.mkdir();
+        }
+        File file2 = new File(basePath + "filelist");
+        if (!file2.exists()) {//若此目录不存在，则创建之
+            file2.mkdir();
         }
         // 2.导出MySql的sql文件
         ExportSQLFile.exportSql();
         // 3.将文件复制到刚创建的文件夹下
-        copyDir(basePath + "filelist", filePath);
+//        copyDir(basePath + "filelist", filePath);
         // 4.打成zip包
-        FileToZip.fileToZip(filePath, basePath, format);
+        FileToZip.fileToZip(basePath + "filelist", basePath, format);
         // 5.表增加一条记录
         ThesisBackups tb = new ThesisBackups();
         tb.setId(StringUuid.getUuid());

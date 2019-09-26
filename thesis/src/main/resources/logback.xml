@@ -37,15 +37,19 @@
             <!-- 记录日志的编码:此处设置字符集 - -->
             <charset>UTF-8</charset>
         </encoder>    
-    </appender>    
+    </appender>
     <!-- 控制台输出日志级别 -->
-    <root level="info">    
-        <appender-ref ref="STDOUT" />    
-    </root>    
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+    <logger name="Spring Security Debugger" level="ERROR" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="tdflog" />
+    </logger>
     <!-- 指定项目中某个包，当有日志操作行为时的日志记录级别 -->
     <!-- com.tdf为根包，也就是只要是发生在这个根包下面的所有日志操作行为的权限都是DEBUG -->
     <!-- 级别依次为【从高到低】：FATAL > ERROR > WARN > INFO > DEBUG > TRACE  -->
-    <logger name="com.tdf" level="DEBUG">    
-        <appender-ref ref="tdflog" />    
-    </logger>    
+    <logger name="com.tdf" level="info">
+        <appender-ref ref="tdflog" />
+    </logger>
 </configuration>  

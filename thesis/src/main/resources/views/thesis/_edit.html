@@ -280,9 +280,7 @@
                 })
 
                 function getFuzzySearch(form, id, pulldown) {
-                    $(".lay-ZD-search input").off().on("keyup", function () {
-                        // 清空下拉框列表
-                        $("#" + pulldown).empty();
+                    $("#" + id).off().on("input", function () {
                         var str = "";
                         $(this).parents(".lay-ZD-search").addClass("layui-form-selected");
                         var search = $(this).val();
@@ -292,6 +290,8 @@
                             type: 'post',
                             data: {search: search, type: id},
                             success: function (res) {
+                                // 清空下拉框列表
+                                $("#" + pulldown).empty();
                                 $.each(res, function (i, item) {
                                     str += '<dd lay-value="' + item.dictvalue + '" class="">' + item.dictvalue + '</dd>'
                                 })
@@ -301,8 +301,10 @@
                                     $(this).parents(".lay-ZD-search").children(".left-badge-bx").append("<span class='layui-badge'>"
                                         + $(this).attr("lay-value")
                                         + "<i class='layui-icon layui-icon-close'></i>"
-                                        + "</span>&nbsp;&nbsp;"
+                                        + "</span><span>&nbsp;</span>"
                                     );
+                                    // 清空输入框
+                                    $(this).parents(".lay-ZD-search").find("input").val("");
                                 });
                             },
                             error: function (error) {
@@ -320,6 +322,7 @@
 
                 // 删除标签
                 $(document).on("click", ".layui-icon-close", function () {
+                    $(this).parents(".layui-badge").next().remove();
                     $(this).parents(".layui-badge").remove();
                 });
 
@@ -327,7 +330,7 @@
                 $(document).on("click", ".layui-anim-upbit>dd", function () {
                     $(this).siblings().removeClass("layui-this");
                     $(this).addClass("layui-this");
-                    $(this).parents(".lay-ZD-search").removeClass("layui-form-selected").find("input").val($(this).text());
+                    // $(this).parents(".lay-ZD-search").removeClass("layui-form-selected").find("input").val($(this).text());
                     $("dl").hide();
                 })
 

@@ -75,7 +75,7 @@
                                           <span class="left-badge-bx">
                                           </span>
                                         <div class="layui-input-inline">
-                                            <input type="text" id="author" name="author" lay-verify="required"
+                                            <input type="text" id="author" name="author"
                                                    placeholder="模糊搜索下拉框"
                                                    class="layui-input" autocomplete="off">
                                         </div>
@@ -93,7 +93,7 @@
                                             <span class="left-badge-bx">
                                           </span>
                                             <div class="layui-input-inline">
-                                                <input type="text" id="type" name="type" lay-verify="required"
+                                                <input type="text" id="type" name="type"
                                                        placeholder="模糊搜索下拉框"
                                                        class="layui-input" autocomplete="off">
                                             </div>
@@ -112,7 +112,7 @@
                                             <span class="left-badge-bx">
                                           </span>
                                             <div class="layui-input-inline">
-                                                <input type="text" id="keyword" name="keyword" lay-verify="required"
+                                                <input type="text" id="keyword" name="keyword"
                                                        placeholder="模糊搜索下拉框"
                                                        class="layui-input" autocomplete="off">
                                             </div>
@@ -133,7 +133,7 @@
                                             <div class="layui-input-inline">
                                                 <input type="text" id="literature" name="literature"
                                                        placeholder="模糊搜索下拉框"
-                                                       lay-verify="required" class="layui-input" autocomplete="off">
+                                                       class="layui-input" autocomplete="off">
                                             </div>
                                             <dl class="layui-anim layui-anim-upbit" id="pull_down_literature">
 
@@ -248,36 +248,31 @@
                 })
 
                 function getFuzzySearch(form, id, pulldown) {
-                    console.log("pulldown:");
-                    console.log(pulldown);
-                    $("#" + id).off().on("keyup input", function () {
-                        // 清空下拉框列表
-                        $("#" + pulldown).empty();
+                    $("#" + id).off().on("input", function () {
                         var str = "";
                         $(this).parents(".lay-ZD-search").addClass("layui-form-selected");
                         var search = $(this).val();
-                        console.log("search:");
-                        console.log(search);
                         $("#" + pulldown).show();
                         $.ajax({
                             url: TDFPath + 'thesisManage/ajax/fuzzySearch',
                             type: 'post',
                             data: {search: search, type: id},
                             success: function (res) {
+                                // 清空下拉框列表
+                                $("#" + pulldown).empty();
                                 $.each(res, function (i, item) {
                                     str += '<dd lay-value="' + item.dictvalue + '" class="">' + item.dictvalue + '</dd>'
                                 })
                                 $("#" + pulldown).append(str);
                                 $("dd").off().on("click", function () {
                                     // 生成标签
-                                    console.log("$(this123):");
-                                    console.log($(this));
-                                    console.log("-------------------------------------------------------");
                                     $(this).parents(".lay-ZD-search").children(".left-badge-bx").append("<span class='layui-badge'>"
                                         + $(this).attr("lay-value")
                                         + "<i class='layui-icon layui-icon-close'></i>"
-                                        + "</span>&nbsp;&nbsp;"
+                                        + "</span><span>&nbsp;</span>"
                                     );
+                                    // 清空输入框
+                                    $(this).parents(".lay-ZD-search").find("input").val("");
                                 });
                             },
                             error: function (error) {
@@ -295,6 +290,7 @@
 
                 // 删除标签
                 $(document).on("click", ".layui-icon-close", function () {
+                    $(this).parents(".layui-badge").next().remove();
                     $(this).parents(".layui-badge").remove();
                 });
 
@@ -302,7 +298,7 @@
                 $(document).on("click", ".layui-anim-upbit>dd", function () {
                     $(this).siblings().removeClass("layui-this");
                     $(this).addClass("layui-this");
-                    $(this).parents(".lay-ZD-search").removeClass("layui-form-selected").find("input").val($(this).text());
+                    // $(this).parents(".lay-ZD-search").removeClass("layui-form-selected").find("input").val($(this).text());
                     $("dl").hide();
                 })
 

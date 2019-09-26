@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -190,17 +189,17 @@ public class ThesisManageController extends BaseController {
      */
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public String download(HttpServletRequest request, HttpSession session, HttpServletResponse response,
-                           String filePath, String filename) throws IOException {
+                           String filePath, String fileName) throws IOException {
         response.setCharacterEncoding("UTF-8");
         OutputStream os = response.getOutputStream();
-        String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
         try {
             response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Disposition", "attachment;fileName=" + java.net.URLEncoder.encode(filename, "UTF-8"));
-        } catch (UnsupportedEncodingException e1) {
-        }
-        response.setHeader("Content-Disposition", "attachment;fileName=" + java.net.URLEncoder.encode(filename, "UTF-8"));
-        try {
+            if (getBrowser(request).equals("FF")) {
+                fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");
+                response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
+            } else {
+                response.addHeader("Content-Disposition", "attachment;fileName=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+            }
             InputStream inputStream = new FileInputStream(filePathUrl + filePath);
             byte[] b = new byte[2048];
             int length;
@@ -212,6 +211,25 @@ public class ThesisManageController extends BaseController {
             inputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 判断浏览器种类
+     *
+     * @param request
+     * @return
+     */
+    private String getBrowser(HttpServletRequest request) {
+        String UserAgent = request.getHeader("USER-AGENT").toLowerCase();
+        if (UserAgent != null) {
+            if (UserAgent.indexOf("msie") >= 0)
+                return "IE";
+            if (UserAgent.indexOf("firefox") >= 0)
+                return "FF";
+            if (UserAgent.indexOf("safari") >= 0)
+                return "SF";
         }
         return null;
     }

@@ -15,9 +15,9 @@ public class ExportSQLFile {
     public static void exportSql() {
         // https://blog.csdn.net/chaoyue1861/article/details/91038304
         StringBuffer command = new StringBuffer();
-        String username = "root";
-        String password = "Aa123456";
-        String host = "192.168.10.244";// 主机地址
+        String username = "hospital";
+        String password = "hospitalAa123456";
+        String host = "47.111.29.246";// 主机地址
         String port = "3306";// 端口号
         String exportDatabaseName = "thesis";// 数据库名称
         String exportPath = "D:\\databackup\\filelist\\thesis.sql";// 目标文件所在位置
@@ -29,7 +29,8 @@ public class ExportSQLFile {
         Runtime runtime = Runtime.getRuntime();
         // 这里其实是在命令窗口中执行的 command 命令行
         try {
-            Process exec = runtime.exec("C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\" + command.toString());
+//            Process exec = runtime.exec("C:\\Program Files\\MySQL\\MySQL Server 5.7\\bin\\" + command.toString());
+            Process exec = runtime.exec("C:\\mysql-5.7.25-winx64\\bin\\" + command.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

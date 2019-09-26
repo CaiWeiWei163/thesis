@@ -76,33 +76,32 @@ public class ThesisDataBackupController extends BaseController {
     }
 
     /**
-     * 数据备份(打包并下载，根据id下载文件)
+     * 打包并下载
      *
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value = "/ajax/download", method = RequestMethod.GET)
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
     public void download(HttpServletRequest request, HttpServletResponse response, String id) {
         // 根据id查询文件路径
         String filePath = thesisDataBackupService.getThesisBackupsById(id).getFileinfoId();
         File file = new File(filePath);
         String fileName = file.getName();
         InputStream fis = null;
+        response.setCharacterEncoding("UTF-8");
         try {
             fis = new FileInputStream(file);
             request.setCharacterEncoding("UTF-8");
             String agent = request.getHeader("User-Agent").toUpperCase();
-            if ((agent.indexOf("MSIE") > 0) || ((agent.indexOf("RV") != -1) && (agent.indexOf("FIREFOX") == -1)))
-                fileName = URLEncoder.encode(fileName, "UTF-8");
-            else {
-                fileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+            if (getBrowser(request).equals("FF")) {
+                fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");
+                response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
+            } else {
+                response.addHeader("Content-Disposition", "attachment;fileName=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
             }
-            response.reset();
-            response.setCharacterEncoding("UTF-8");
+//            response.reset();
             response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
-            response.setHeader("Content-Length", String.valueOf(file.length()));
             byte[] b = new byte[1024];
             int len;
             while ((len = fis.read(b)) != -1) {
@@ -113,6 +112,25 @@ public class ThesisDataBackupController extends BaseController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 判断浏览器种类
+     *
+     * @param request
+     * @return
+     */
+    private String getBrowser(HttpServletRequest request) {
+        String UserAgent = request.getHeader("USER-AGENT").toLowerCase();
+        if (UserAgent != null) {
+            if (UserAgent.indexOf("msie") >= 0)
+                return "IE";
+            if (UserAgent.indexOf("firefox") >= 0)
+                return "FF";
+            if (UserAgent.indexOf("safari") >= 0)
+                return "SF";
+        }
+        return null;
     }
 
 }
